@@ -28,6 +28,18 @@ service cloud.firestore {
     match /config/company { allow read: if active(); allow write: if isAdmin(); }
     match /config/seq     { allow read: if active(); allow write: if canWrite(); }
 
+    // Sao lưu đám mây: người có quyền ghi được TẠO bản sao lưu; chỉ admin xem / xoá.
+    // Không ai sửa được bản sao lưu đã tạo (không có quyền update) → lỗi app không ghi đè được bản cũ.
+    match /config/backup { allow read: if active(); allow write: if canWrite(); }
+    match /backups/{id} {
+      allow read, delete: if isAdmin();
+      allow create: if canWrite();
+      match /parts/{n} {
+        allow read, delete: if isAdmin();
+        allow create: if canWrite();
+      }
+    }
+
     // Thành viên & tỷ lệ góp vốn: chỉ admin được sửa
     match /members/{id} { allow read: if active(); allow write: if isAdmin(); }
 

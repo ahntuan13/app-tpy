@@ -74,6 +74,7 @@ function afterReady(){
   migrate();
   if(session.role==='admin'&&!db.members.length){db.members=defaultDB().members;save()}
   render(false);
+  if(typeof autoBackup==='function')setTimeout(autoBackup,3000);
 }
 function applyRemote(col,changes){
   let changed=false;

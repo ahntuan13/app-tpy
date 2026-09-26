@@ -25,6 +25,7 @@ js/
   33-settings.js           Thành viên & góp vốn, User / Permission, Sao lưu & Hệ thống
   34-sample-data.js        Dữ liệu mẫu
   50-firebase-sync.js      Firebase: đăng nhập, đồng bộ realtime, quản lý người dùng
+  51-cloud-backup.js       Sao lưu đám mây: tự sao lưu mỗi ngày lên Firestore, khôi phục / tải về
   99-main.js               Khởi động, kiểm tra đủ file
 ```
 
@@ -74,6 +75,14 @@ Với Firebase, quyền được kiểm tra ở máy chủ bằng `firestore.rul
 - Thanh đỏ dưới màn hình cho biết **tên file và số dòng** gây lỗi.
 - Màn hình "Thiếu file chương trình" nghĩa là quên upload một file trong `js/`.
 - F12 → Console để xem chi tiết.
+
+## Sao lưu đám mây
+Khi bật Firebase, app **tự động sao lưu mỗi ngày** (lần đầu một người có quyền ghi mở app trong ngày) vào Firestore, collection `backups`.
+- Settings → Sao lưu & Hệ thống → **Sao lưu đám mây**: sao lưu ngay, xem danh sách, **khôi phục**, tải về JSON, xoá.
+- Bản sao lưu không sửa được sau khi tạo (Rules chặn), chỉ quản trị viên xem / khôi phục / xoá. Giữ 60 bản gần nhất.
+- Trước khi khôi phục, app tự tạo bản “Trước khôi phục” để có thể quay lại.
+- Nhớ dán lại `firestore.rules` mới vào Firebase mỗi khi file này thay đổi.
+- Nên thỉnh thoảng bấm **⬇ JSON** để giữ thêm một bản trên máy / Google Drive, phòng khi mất quyền vào project Firebase.
 
 ## Lưu ý
 - Dữ liệu chế độ cục bộ nằm trong trình duyệt từng máy; hãy xuất **sao lưu JSON** định kỳ.
