@@ -4,14 +4,14 @@
 
 const taskCard=t=>`<div class="tk ${t.done?'dn':''}"><input type="checkbox" data-act="task-done" data-p="${t.projectId}" data-t="${t.id}" ${t.done?'checked':''} ${can('write')?'':'disabled'} aria-label="Đánh dấu xong"><div style="flex:1;min-width:0"><div class="tt">${esc(t.title)}</div><div class="tm">${prjLink(t.p)}${t.phase?`<span>· ${esc(t.phase.name)}</span>`:''}${t.due?` ${badge(isLate(t)?'bad':'mute',(isLate(t)?'Trễ · ':'')+fmtDate(t.due))}`:''}</div></div>${can('write')?`<button class="btn sm" data-act="task-edit" data-p="${t.projectId}" data-id="${t.id}" aria-label="Sửa">✎</button>`:''}</div>`;
 
-PAGES['task/board']={t:'Phân chia công việc theo người',
+PAGES['task/board']={t:'Phân chia công việc',
   head(){return `<div class="bar">${fSel('p','Dự án',prjOpts('Tất cả dự án'))}${fSel('st','Trạng thái',[['','Việc đang mở'],['all','Cả việc đã xong']])}<div class="sp"></div>${can('write')?'<button class="btn acc" data-act="task-new">＋ Giao việc</button>':''}</div>`},
   tbl(){
     const f=F();let ts=allTasks().filter(t=>(!f.p||t.projectId===f.p)&&(f.st==='all'||!t.done));
     const cols=[...members().map(m=>[m.id,m.name]),['','Chưa giao']];
     const known=new Set(members().map(m=>m.id));
     return `<div class="board">${cols.map(([id,name])=>{const list=ts.filter(t=>id?t.owner===id:!known.has(t.owner)).sort((a,b)=>(a.done-b.done)||(a.due||'9999').localeCompare(b.due||'9999'));const late=list.filter(isLate).length;
-      return `<div class="col"><h4>${id?memAv(id):''}${esc(name)}<small>${list.length} việc${late?` · <span class="tag-bad">${late} trễ</span>`:''}</small></h4>${list.length?list.map(taskCard).join(''):'<div class="note">Trống</div>'}</div>`}).join('')}</div>`;
+      return `<div class="col"><h4>${id?memAv(id):''}${esc(name)}<small>${list.length} việc${late?` · <span class="tag-bad">${late} trễ</span>`:''}</small></h4>${list.length?list.map(taskCard).join(''):'<div class="note">Trống</div>'}${can('write')&&db.projects.length?`<button class="btn sm add-tk" data-act="task-new" data-owner="${id}">＋ Giao việc${id?' cho '+esc(name):''}</button>`:''}</div>`}).join('')}</div>`;
   }};
 
 function taskTable(list){

@@ -71,8 +71,9 @@ function startSync(){
   else unsubs.push(fbStore.doc('users/'+session.id).onSnapshot(s=>{db.users=s.exists?[uMap(s.id,s.data())]:[];mark('users')},fail));
 }
 function afterReady(){
-  migrate();
+  const need=needsMigrate();migrate();
   if(session.role==='admin'&&!db.members.length){db.members=defaultDB().members;save()}
+  else if(need&&can('write'))save();
   render(false);
   if(typeof autoBackup==='function')setTimeout(autoBackup,3000);
 }
@@ -124,7 +125,7 @@ async function commitOps(ops){
 /* ---------- đăng nhập / thiết lập lần đầu ---------- */
 function cloudLoginView(){
   const setup=ui.loginMode==='setup';
-  $('#app').innerHTML=`<div class="login"><form class="lcard" data-submit="${setup?'fb-setup':'login'}">${logoBlock()}<h1>${setup?'Thiết lập lần đầu':'Quản lý Dự án'}</h1><p>${setup?'Tạo tài khoản quản trị viên đầu tiên':'Các App 3 anh em cùng đầu tư'}</p>
+  $('#app').innerHTML=`<div class="login"><form class="lcard" data-submit="${setup?'fb-setup':'login'}">${logoBlock()}<h1>${setup?'Thiết lập lần đầu':'Quản lý Dự án'}</h1><p>${setup?'Tạo tài khoản quản trị viên đầu tiên':'Studio code App bằng AI · Tuấn – Phúc – Yến'}</p>
     ${inp('username','Email','',{req:1,type:'email',attrs:'autocomplete="username" autofocus'})}
     ${setup?inp('name','Họ tên','',{req:1}):''}
     ${inp('password','Mật khẩu'+(setup?' (tối thiểu 6 ký tự)':''),'',{type:'password',req:1,attrs:`autocomplete="${setup?'new-password':'current-password'}" ${setup?'minlength="6"':''}`})}

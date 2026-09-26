@@ -1,28 +1,27 @@
-/* 33-settings.js – Thành viên & tỷ lệ góp vốn, User / Permission, Sao lưu & Hệ thống */
+/* 33-settings.js – Thành viên, User / Permission, Sao lưu & Hệ thống */
 'use strict';
 (self.__mods=self.__mods||[]).push('33-settings');
 
-/* ---------- thành viên (3 anh em) ---------- */
-PAGES['set/members']={t:'Thành viên & góp vốn',
+/* ---------- thành viên: Tuấn – Phúc – Yến ---------- */
+PAGES['set/members']={t:'Thành viên',
   r(){
-    const adm=can('admin'),tot=members().reduce((a,m)=>a+(+m.share||0),0),y=curYear();
+    const adm=can('admin'),y=curYear();
     return `<div class="bar"><div class="sp"></div>${adm?'<button class="btn acc" data-act="mem-new">＋ Thêm thành viên</button>':''}</div>`+
-    (tot!==100?`<p class="note tag-bad">Tổng tỷ lệ góp vốn đang là ${tot}%, nên điều chỉnh về 100%.</p>`:'')+
-    table([{h:'Thành viên',f:m=>`<span class="mem">${memAv(m.id)}<span><b>${esc(m.name)}</b>${m.note?`<small>${esc(m.note)}</small>`:''}</span></span>`,x:m=>m.name},nc('Tỷ lệ góp vốn (%)',m=>+m.share||0),{h:'Điện thoại',f:m=>esc(m.phone||'—')},{h:'Tài khoản nhận tiền',f:m=>esc(m.bank||'—')},nc('Trưởng dự án',m=>db.projects.filter(p=>p.lead===m.id).length),nc('Việc đang mở',m=>allTasks().filter(t=>t.owner===m.id&&!t.done).length),nc(`Đang giữ (${y})`,m=>memberHeld(m.id,y),fmtMoney),actCol(m=>adm?`<button class="btn sm" data-act="mem-edit" data-id="${m.id}">Sửa</button>${db.members.length>1?` <button class="btn sm danger" data-act="mem-del" data-id="${m.id}">Xoá</button>`:''}`:'')],members(),{foot:`<tr><td>Tổng</td><td class="num">${tot}</td><td colspan="6"></td></tr>`})+
-    `<p class="note">Tỷ lệ góp vốn dùng để chia lợi nhuận ở Tổng quan và Báo cáo → Chia lợi nhuận. Chỉ quản trị viên được sửa.</p>`;
+    table([{h:'Thành viên',f:m=>`<span class="mem">${memAv(m.id)}<span><b>${esc(m.name)}</b>${m.note?`<small>${esc(m.note)}</small>`:''}</span></span>`,x:m=>m.name},{h:'Điện thoại',f:m=>esc(m.phone||'—')},{h:'Tài khoản nhận tiền',f:m=>esc(m.bank||'—')},nc('Việc đang làm',m=>allTasks().filter(t=>t.owner===m.id&&!t.done).length),{h:'Trễ hạn',c:'num',f:m=>{const n=allTasks().filter(t=>t.owner===m.id&&isLate(t)).length;return n?`<span class="tag-bad">${n}</span>`:'0'},x:m=>allTasks().filter(t=>t.owner===m.id&&isLate(t)).length},nc('Việc đã xong',m=>allTasks().filter(t=>t.owner===m.id&&t.done).length),nc(`Tiền đã nhận (${y})`,m=>sumAmt(db.transactions.filter(t=>t.memberId===m.id&&txIn(t)&&inYear(t,y))),fmtMoney),actCol(m=>adm?`<button class="btn sm" data-act="mem-edit" data-id="${m.id}">Sửa</button>${db.members.length>1?` <button class="btn sm danger" data-act="mem-del" data-id="${m.id}">Xoá</button>`:''}`:'')],members())+
+    `<p class="note">Thành viên là người được giao việc và người nhận / chi tiền trong các phiếu thu – chi. Chỉ quản trị viên được sửa.</p>`;
   }};
 function memForm(id){
-  const m=id?by(db.members,id):{name:'',share:0,phone:'',bank:'',note:''};
-  modal(id?'Sửa thành viên':'Thêm thành viên',`<form id="mf" data-submit="mem-save" data-id="${id||''}"><div class="fg">${inp('name','Tên',m.name,{req:1})}${inp('share','Tỷ lệ góp vốn (%)',fmtPrice(m.share||0),{req:1,attrs:'inputmode="decimal" data-num="money"'})}${inp('phone','Điện thoại',m.phone)}${inp('bank','Tài khoản nhận tiền',m.bank,{ph:'VD: VCB 0123456789'})}${txa('note','Ghi chú',m.note,{full:1})}</div></form>`,{footer:cancelBtn+'<button class="btn primary" form="mf">Lưu</button>'});
+  const m=id?by(db.members,id):{name:'',phone:'',bank:'',note:''};
+  modal(id?'Sửa thành viên':'Thêm thành viên',`<form id="mf" data-submit="mem-save" data-id="${id||''}"><div class="fg">${inp('name','Tên',m.name,{req:1})}${inp('phone','Điện thoại',m.phone)}${inp('bank','Tài khoản nhận tiền',m.bank,{ph:'VD: VCB 0123456789'})}${inp('note','Vai trò / ghi chú',m.note,{ph:'VD: Frontend, Prompt, Marketing…'})}</div></form>`,{footer:cancelBtn+'<button class="btn primary" form="mf">Lưu</button>'});
 }
 ACT['mem-new']=()=>memForm();ACT['mem-edit']=el=>memForm(el.dataset.id);
 SUB['mem-save']=form=>{
   if(!can('admin'))return toast('Chỉ quản trị viên được sửa.','error');
   const d=fd(form),id=form.dataset.id;
-  if(transact(()=>{if(!db.members.length)db.members=defaultDB().members;let m=id?by(db.members,id):null;if(!m){m={id:uid('m')};db.members.push(m)}Object.assign(m,{name:d.name.trim(),share:r2(numVN(d.share)),phone:d.phone.trim(),bank:d.bank.trim(),note:d.note.trim()})}))done();
+  if(transact(()=>{if(!db.members.length)db.members=defaultDB().members;let m=id?by(db.members,id):null;if(!m){m={id:uid('m')};db.members.push(m)}Object.assign(m,{name:d.name.trim(),phone:d.phone.trim(),bank:d.bank.trim(),note:d.note.trim()});delete m.share}))done();
 };
 ACT['mem-del']=el=>{
-  const id=el.dataset.id,used=db.transactions.some(t=>t.memberId===id)||db.projects.some(p=>p.lead===id||(p.tasks||[]).some(t=>t.owner===id)||(p.phases||[]).some(x=>x.owner===id));
+  const id=el.dataset.id,used=db.transactions.some(t=>t.memberId===id)||db.projects.some(p=>(p.tasks||[]).some(t=>t.owner===id));
   if(used)return toast('Thành viên đã có giao dịch / công việc, không thể xoá. Có thể đổi tên thay vì xoá.','error');
   if(confirm('Xoá thành viên này?'))transact(()=>{db.members=db.members.filter(m=>m.id!==id)})&&done('Đã xoá');
 };
@@ -33,7 +32,7 @@ PAGES['set/users']={t:'User / Permission',
     const adm=can('admin');
     return `<div class="bar"><div class="sp"></div>${adm?'<button class="btn acc" data-act="user-new">＋ Thêm người dùng</button>':''}</div>`+
     table([{h:CLOUD?'Email':'Tên đăng nhập',f:u=>`<b>${esc(u.username)}</b>`},{h:'Họ tên',f:u=>esc(u.name)},{h:'Vai trò',f:u=>badge(u.role==='admin'?'bad':u.role==='member'?'info':'mute',ROLES[u.role]||u.role)},{h:'Trạng thái',f:u=>u.active?badge('ok','Đang hoạt động'):badge('mute','Đã khoá')},actCol(u=>adm?`<button class="btn sm" data-act="user-edit" data-id="${u.id}">Sửa</button>${CLOUD?` <button class="btn sm" data-act="user-reset" data-id="${u.id}" title="Gửi email đặt lại mật khẩu">Đặt lại MK</button>`:(u.id!==session.id?` <button class="btn sm danger" data-act="user-del" data-id="${u.id}">Xoá</button>`:'')}`:'')],db.users)+
-    card('Phân quyền theo vai trò',miniTable(['Chức năng','Quản trị viên','Thành viên','Chỉ xem'],[['Xem dashboard, dự án, dòng tiền, báo cáo','✔','✔','✔'],['Thêm / sửa dự án, giai đoạn, công việc','✔','✔','—'],['Ghi tiền về, khoản chi','✔','✔','—'],['Tỷ lệ góp vốn, người dùng, sao lưu / khôi phục','✔','—','—']].map(r=>`<tr><td>${r[0]}</td><td class="c">${r[1]}</td><td class="c">${r[2]}</td><td class="c">${r[3]}</td></tr>`))+(CLOUD?'<p class="note">Chế độ Firebase: quyền được kiểm tra ở máy chủ bằng Firestore Security Rules (file firestore.rules).</p>':'<p class="note">Chế độ cục bộ: phân quyền chỉ giúp hạn chế thao tác nhầm trên máy này. Muốn bảo mật thật sự và dùng chung cho 3 anh em, hãy bật Firebase.</p>'));
+    card('Phân quyền theo vai trò',miniTable(['Chức năng','Quản trị viên','Thành viên','Chỉ xem'],[['Xem dashboard, dự án, dòng tiền, báo cáo','✔','✔','✔'],['Thêm / sửa dự án, giai đoạn, công việc','✔','✔','—'],['Ghi tiền về, khoản chi','✔','✔','—'],['Thành viên, người dùng, sao lưu / khôi phục','✔','—','—']].map(r=>`<tr><td>${r[0]}</td><td class="c">${r[1]}</td><td class="c">${r[2]}</td><td class="c">${r[3]}</td></tr>`))+(CLOUD?'<p class="note">Chế độ Firebase: quyền được kiểm tra ở máy chủ bằng Firestore Security Rules (file firestore.rules).</p>':'<p class="note">Chế độ cục bộ: phân quyền chỉ giúp hạn chế thao tác nhầm trên máy này. Muốn bảo mật thật sự và dùng chung cho 3 anh em, hãy bật Firebase.</p>'));
   }};
 function userForm(id){
   const u=id?by(db.users,id):{username:'',name:'',role:'member',active:true};

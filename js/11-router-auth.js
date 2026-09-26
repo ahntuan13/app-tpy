@@ -47,7 +47,7 @@ window.addEventListener('hashchange',()=>render(false));
 /* ---------- đăng nhập ---------- */
 function loginView(){
   if(CLOUD)return cloudLoginView();
-  $('#app').innerHTML=`<div class="login"><form class="lcard" data-submit="login">${logoBlock()}<h1>Quản lý Dự án</h1><p>Các App 3 anh em cùng đầu tư</p>${inp('username','Tên đăng nhập','',{req:1,attrs:'autocomplete="username" autofocus'})}${inp('password','Mật khẩu','',{type:'password',req:1,attrs:'autocomplete="current-password"'})}<button class="btn primary block">Đăng nhập</button><div class="hint">Tài khoản mặc định: <b>admin</b> / <b>admin123</b>. Hãy đổi mật khẩu sau khi đăng nhập.</div><button type="button" class="lnk" data-act="fb-config">Kết nối Firebase để dùng chung dữ liệu…</button></form></div>`;
+  $('#app').innerHTML=`<div class="login"><form class="lcard" data-submit="login">${logoBlock()}<h1>Quản lý Dự án</h1><p>Studio code App bằng AI · Tuấn – Phúc – Yến</p>${inp('username','Tên đăng nhập','',{req:1,attrs:'autocomplete="username" autofocus'})}${inp('password','Mật khẩu','',{type:'password',req:1,attrs:'autocomplete="current-password"'})}<button class="btn primary block">Đăng nhập</button><div class="hint">Tài khoản mặc định: <b>admin</b> / <b>admin123</b>. Hãy đổi mật khẩu sau khi đăng nhập.</div><button type="button" class="lnk" data-act="fb-config">Kết nối Firebase để dùng chung dữ liệu…</button></form></div>`;
 }
 SUB.login=form=>{
   const d=fd(form),u=db.users.find(x=>x.username.toLowerCase()===d.username.trim().toLowerCase());

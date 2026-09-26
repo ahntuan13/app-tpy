@@ -11,15 +11,17 @@ let PAGE=null,S=null,T=null,IMP=null;
 const F=()=>(ui.f[ui.key]??={});
 const badge=(t,x)=>`<span class="bd ${t}">${esc(x)}</span>`;
 const logoBlock=()=>typeof LOGO_DATA!=='undefined'?`<img class="lm-img" src="${LOGO_DATA}" alt="3AE">`:'<div class="lm">3AE</div>';
-const PAL=['#e4570e','#0f1e33','#3b7dd8','#3f9a6b','#c9a227','#8a5bd1','#d6447a','#5f7387','#17a2b8','#9aa84a'];
+const PAL=['#6c5ce7','#0e9f8b','#2f7de1','#e29a2d','#ec6a5e','#9b7bf0','#22b8c9','#64748b','#d6447a','#84b33a'];
+/* Màu biểu đồ theo ý nghĩa */
+const CC={in:'#0e9f8b',inInv:'#6c5ce7',inNo:'#f0a940',out:'#ec6a5e',line:'#2f7de1'};
 
 const MENU=[
  {g:'dash',icon:'📊',label:'Dashboard',items:[['overview','Tổng quan'],['cash','Dòng tiền theo tháng'],['progress','Tiến độ các App']]},
- {g:'prj',icon:'🚀',label:'Dự án / App',items:[['list','Tất cả dự án'],['inv','Trả phí · có hóa đơn'],['noinv','Trả phí · không hóa đơn'],['free','Miễn phí'],['phases','Giai đoạn các App']]},
+ {g:'prj',icon:'🚀',label:'Dự án / App',items:[['list','Tất cả dự án'],['inv','Trả phí · có hóa đơn'],['noinv','Trả phí · không hóa đơn'],['free','Miễn phí'],['track','Đang theo dõi'],['phases','Giai đoạn các App']]},
  {g:'cash',icon:'💰',label:'Dòng tiền',items:[['in','Tiền về'],['out','Khoản chi'],['all','Sổ thu – chi']]},
  {g:'task',icon:'✅',label:'Công việc',items:[['board','Phân chia theo người'],['all','Tất cả công việc'],['late','Trễ hạn']]},
- {g:'rpt',icon:'📅',label:'Báo cáo',items:[['project','Theo dự án'],['monthly','Theo tháng'],['invoice','Có / không hóa đơn'],['share','Chia lợi nhuận']]},
- {g:'set',icon:'⚙️',label:'Settings',items:[['members','Thành viên & góp vốn'],['users','User / Permission'],['system','Sao lưu & Hệ thống']]}
+ {g:'rpt',icon:'📅',label:'Báo cáo',items:[['project','Theo dự án'],['monthly','Theo tháng'],['invoice','Có / không hóa đơn']]},
+ {g:'set',icon:'⚙️',label:'Settings',items:[['members','Thành viên'],['users','User / Permission'],['system','Sao lưu & Hệ thống']]}
 ];
 /* ---------- toast / modal ---------- */
 function toast(msg,type='ok'){const r=$('#toast-root');if(!r)return;const d=document.createElement('div');d.className='toast '+type;d.textContent=msg;r.appendChild(d);setTimeout(()=>d.classList.add('out'),3400);setTimeout(()=>d.remove(),3800)}
@@ -84,11 +86,11 @@ function exportCurrent(name){
 function chart(id,cfg){
   const c=document.getElementById(id);if(!c)return;
   if(!window.Chart){c.parentElement.innerHTML='<div class="empty">Chưa tải được thư viện biểu đồ (Chart.js).</div>';return}
-  Chart.defaults.font.family="'Be Vietnam Pro',system-ui,sans-serif";
+  Chart.defaults.font.family="'Be Vietnam Pro',system-ui,sans-serif";Chart.defaults.color='#6b7394';Chart.defaults.borderColor='#e6e9f2';
   ui.charts.push(new Chart(c,cfg));
 }
 function destroyCharts(){ui.charts.forEach(c=>{try{c.destroy()}catch(e){}});ui.charts=[]}
-const baseOpt=(extra={})=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},...extra});
+const baseOpt=(extra={})=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'rectRounded',boxWidth:10,boxHeight:10}}},datasets:{bar:{borderRadius:5,maxBarThickness:26}},...extra});
 
 /* ---------- in / PDF ---------- */
 function offscreen(html,width=794){const d=document.createElement('div');d.style.cssText=`position:fixed;left:-99999px;top:0;width:${width}px;background:#fff;z-index:-1`;d.innerHTML=html;document.body.appendChild(d);return d}
