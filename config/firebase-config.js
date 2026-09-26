@@ -1,18 +1,12 @@
 /* =====================================================================
-   CẤU HÌNH FIREBASE – ĐÂY LÀ FILE DUY NHẤT BẠN CẦN SỬA KHI BẬT DÙNG CHUNG
-   - Đang để null  → chạy chế độ cục bộ (lưu trong trình duyệt, đăng nhập admin / admin123).
-   - Dán khối firebaseConfig lấy từ Firebase Console vào đây (đổi tên biến thành FIREBASE_CONFIG)
-     để 3 anh em dùng chung dữ liệu, đồng bộ realtime. Xem README mục "Bật Firebase".
-   - Nên tạo PROJECT FIREBASE RIÊNG cho app này, không dùng chung project kho-ttd.
+   CẤU HÌNH FIREBASE – ĐÂY LÀ FILE DUY NHẤT BẠN CẦN SỬA KHI ĐỔI PROJECT
+   - Đổi thành:  const FIREBASE_CONFIG = null;  để chạy chế độ cục bộ (không dùng chung dữ liệu).
    ===================================================================== */
-const FIREBASE_CONFIG = null;
-/* Ví dụ:
 const FIREBASE_CONFIG = {
-  apiKey: "AIza...",
-  authDomain: "du-an-3ae.firebaseapp.com",
-  projectId: "du-an-3ae",
-  storageBucket: "du-an-3ae.firebasestorage.app",
-  messagingSenderId: "...",
-  appId: "1:...:web:..."
+  apiKey: "AIzaSyBgygvbq1qQyW57vFCEN_2izRR06yx9Ni8",
+  authDomain: "taytrai-bb93c.firebaseapp.com",
+  projectId: "taytrai-bb93c",
+  storageBucket: "taytrai-bb93c.firebasestorage.app",
+  messagingSenderId: "247943466298",
+  appId: "1:247943466298:web:67550ed19b2a994f549403"
 };
-*/
