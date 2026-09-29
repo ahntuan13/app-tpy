@@ -6,6 +6,9 @@
    KHUNG GIAO DIỆN
    ===================================================================== */
 const ui={key:'',f:{},open:{},charts:[],cur:null};
+/* Ghi công tác giả – hiện ở menu trái, cuối mỗi trang, màn hình đăng nhập và báo cáo in */
+const CREDIT='🔧 Developed by Ahn Tuan (chỉ dùng trong nội bộ)';
+const creditHTML=(cls='credit')=>`<div class="${cls}">${esc(CREDIT)}</div>`;
 const PAGES={},ACT={},SUB={};
 let PAGE=null,S=null,T=null,IMP=null;
 const F=()=>(ui.f[ui.key]??={});
@@ -115,5 +118,5 @@ function reportHTML(){
   const c=db.company||{},t=$('#tbl'),clone=t.cloneNode(true);
   const src=$$('canvas',t),dst=$$('canvas',clone);
   dst.forEach((cv,i)=>{try{const img=new Image();img.src=src[i].toDataURL('image/png');img.style.cssText='max-width:100%;height:auto';cv.replaceWith(img)}catch(e){cv.remove()}});
-  return `<div class="rpt-doc"><div class="rpt-hd"><div class="co">${typeof LOGO_DATA!=='undefined'?`<img class="slip-logo" src="${LOGO_DATA}" alt="Logo">`:''}<div><b>${esc(c.name||'')}</b><div>${esc(c.note||'')}</div></div></div><div>Ngày in: ${fmtDate(todayStr())}</div></div><h2>${esc(PAGE.t)}</h2>${PAGE.sub?`<div class="sub">${PAGE.sub()}</div>`:''}${clone.innerHTML}</div>`;
+  return `<div class="rpt-doc"><div class="rpt-hd"><div class="co">${typeof LOGO_DATA!=='undefined'?`<img class="slip-logo" src="${LOGO_DATA}" alt="Logo">`:''}<div><b>${esc(c.name||'')}</b><div>${esc(c.note||'')}</div></div></div><div>Ngày in: ${fmtDate(todayStr())}</div></div><h2>${esc(PAGE.t)}</h2>${PAGE.sub?`<div class="sub">${PAGE.sub()}</div>`:''}${clone.innerHTML}<div style="margin-top:14px;font-size:11px;color:#777;text-align:right">${esc(CREDIT)}</div></div>`;
 }

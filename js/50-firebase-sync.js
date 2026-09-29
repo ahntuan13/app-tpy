@@ -14,7 +14,7 @@
 const SYNC=['projects','transactions','members'];
 let fbAuth=null,fbStore=null,cloudReady=false,unsubs=[],remote={},remoteCfg={},setupPending=false,pushQ=Promise.resolve(),renderTimer=null;
 const canon=v=>JSON.stringify(v,(k,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.keys(x).sort().reduce((o,kk)=>(o[kk]=x[kk],o),{}):x);
-const loadingHTML=m=>`<div class="login"><div class="lcard">${logoBlock()}<h1>${esc(m)}</h1><p>Vui lòng đợi trong giây lát…</p></div></div>`;
+const loadingHTML=m=>`<div class="login"><div class="lcard">${logoBlock()}<h1>${esc(m)}</h1><p>Vui lòng đợi trong giây lát…</p></div>${creditHTML('login-credit')}</div>`;
 const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('Không tải được thư viện Firebase. Kiểm tra kết nối mạng.'));document.head.appendChild(s)});
 function authMsg(e){
   const c=e&&e.code||'';
@@ -133,7 +133,7 @@ function cloudLoginView(){
     <button class="btn primary block">${setup?'Tạo quản trị viên':'Đăng nhập'}</button>
     ${setup?'<div class="hint">Chỉ dùng cho lần đầu tiên khi hệ thống chưa có ai. Nếu đã có quản trị viên, hãy nhờ họ tạo tài khoản cho bạn.</div>':'<button type="button" class="lnk" data-act="fb-forgot">Quên mật khẩu?</button>'}
     <button type="button" class="lnk" data-act="fb-mode">${setup?'← Quay lại đăng nhập':'Thiết lập lần đầu (chưa có tài khoản quản trị)'}</button>
-    ${FIREBASE_CONFIG?'':'<button type="button" class="lnk" data-act="fb-disconnect">Ngắt kết nối Firebase (chế độ cục bộ)</button>'}</form></div>`;
+    ${FIREBASE_CONFIG?'':'<button type="button" class="lnk" data-act="fb-disconnect">Ngắt kết nối Firebase (chế độ cục bộ)</button>'}</form>${creditHTML('login-credit')}</div>`;
 }
 ACT['fb-mode']=()=>{ui.loginMode=ui.loginMode==='setup'?'login':'setup';cloudLoginView()};
 ACT['fb-forgot']=async()=>{

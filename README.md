@@ -88,3 +88,6 @@ Khi bật Firebase, app **tự động sao lưu mỗi ngày** (lần đầu mộ
 - Dữ liệu chế độ cục bộ nằm trong trình duyệt từng máy; hãy xuất **sao lưu JSON** định kỳ.
 - Với Firebase: hai người sửa cùng một dự án cùng lúc thì người lưu sau thắng.
 - Tiền tệ là VND; ô số tiền gõ được kiểu `15.000.000` hoặc phép tính (`500000/1.08`).
+
+---
+🔧 Developed by Ahn Tuan (chỉ dùng trong nội bộ)
