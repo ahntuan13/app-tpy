@@ -43,6 +43,12 @@ Các file `js/` được nạp **theo thứ tự số** (file sau dùng hàm c�
 - **Dashboard**: tiền về, chi ra, lợi nhuận ròng, tỷ lệ có HĐ, biểu đồ dòng tiền theo tháng, tiến độ các App, công việc của từng người, việc sắp tới hạn.
 - Xuất **Excel**, **PDF**, **In** ở mọi báo cáo; **sao lưu / khôi phục JSON**.
 
+## Địa chỉ đang dùng
+- Repo: **https://github.com/ahntuan13/app-tpy** (tên cũ `taytrai`)
+- App: **https://ahntuan13.github.io/app-tpy/**
+- Trang giới thiệu cho khách: **https://ahntuan13.github.io/app-tpy/gioi-thieu/**
+- Firebase project vẫn là `taytrai-bb93c` (mã project Firebase không đổi được, không ảnh hưởng gì).
+
 ## Đưa lên GitHub Pages
 1. Tạo repository mới trên GitHub (ví dụ `quanlyduantpy`).
 2. Giải nén file zip, mở thư mục `quanlyduan-tpy`, chọn **toàn bộ** nội dung bên trong (Ctrl+A).
@@ -80,7 +86,7 @@ Với Firebase, quyền được kiểm tra ở máy chủ bằng `firestore.rul
 - F12 → Console để xem chi tiết.
 
 ## Trang giới thiệu sản phẩm (công khai)
-- Link gửi khách: **https://ahntuan13.github.io/taytrai/gioi-thieu/** – không cần đăng nhập, không liên quan dữ liệu trong app.
+- Link gửi khách: **https://ahntuan13.github.io/app-tpy/gioi-thieu/** – không cần đăng nhập, không liên quan dữ liệu trong app.
 - Nội dung sản phẩm: `gioi-thieu/san-pham.js` (không ghi tên khách hàng, link app hay dữ liệu thật).
 - Giao diện: `gioi-thieu/style.css`, hình minh họa vẽ bằng dữ liệu mẫu trong `gioi-thieu/app.js`.
 - Ảnh giao diện: `gioi-thieu/img/` – chụp từ app thật chạy với **dữ liệu giả** (tên, SĐT, số tiền giả; logo và tên khách đã thay). Khai báo trong trường `shots` của từng sản phẩm.
