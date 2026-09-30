@@ -48,7 +48,8 @@ const MOCKS={
     <div class="m-grid2"><div class="m-card"><div class="m-ct">Tiền về có / không hóa đơn</div>${bars([30,18,42,22,36,26,48,20],p.color,50,5,'#f0a940')}</div>
     <div class="m-card"><div class="m-ct">Tiến độ các App</div>${[80,45,62].map(v=>`<div class="m-prog" style="margin:6px 0"><i style="width:${v}%;background:linear-gradient(90deg,#6c5ce7,#16b3a2)"></i></div>`).join('')}</div></div>`)
 };
-const mockOf=p=>p.img?`<img class="m-img" src="${esc(p.img)}" alt="Giao diện ${esc(p.name)}" loading="lazy">`:(MOCKS[p.mock]||MOCKS.dashboard)(p);
+const shotFrame=(p,i=0,lazy=true)=>{const s=p.shots[i];return `<div class="m-frame shotf" style="--c:${p.color}"><div class="m-bar"><span></span><span></span><span></span><em>${esc(s[1])}</em></div><img class="m-img" src="${esc(s[0])}" alt="${esc(p.name)} – ${esc(s[1])}" ${lazy?'loading="lazy"':''} decoding="async"></div>`};
+const mockOf=(p,i=0,lazy)=>p.shots&&p.shots.length?shotFrame(p,i,lazy):(MOCKS[p.mock]||MOCKS.dashboard)(p);
 
 /* ---------- render ---------- */
 const fields=[...new Set(PRODUCTS.map(p=>p.field))];
@@ -60,11 +61,11 @@ function render(){
   $('#stat-products').textContent=PRODUCTS.length;
   $('#stat-fields').textContent=fields.length;
   $('#hero-fields').innerHTML=fields.map(f=>`<span>${esc(f)}</span>`).join('');
-  $('#collage').innerHTML=['ot','crm','cash'].map((id,i)=>{const p=PRODUCTS.find(x=>x.id===id)||PRODUCTS[i];return `<div class="cl cl${i}">${mockOf(p)}</div>`}).join('');
+  $('#collage').innerHTML=['ot','crm','cash'].map((id,i)=>{const p=PRODUCTS.find(x=>x.id===id)||PRODUCTS[i];return `<div class="cl cl${i}">${mockOf(p,0,false)}</div>`}).join('');
   $('#filters').innerHTML=[['','Tất cả'],...fields.map(f=>[f,f])].map(([v,l])=>`<button class="fchip" data-f="${esc(v)}" aria-pressed="${filter===v}">${esc(l)}<small>${v?PRODUCTS.filter(p=>p.field===v).length:PRODUCTS.length}</small></button>`).join('');
   const list=PRODUCTS.filter(p=>!filter||p.field===filter);
   $('#grid').innerHTML=list.map(p=>`<article class="card" style="--c:${p.color}">
-    <button class="shot" data-open="${p.id}" aria-label="Xem chi tiết ${esc(p.name)}">${mockOf(p)}</button>
+    <button class="shot" data-open="${p.id}" aria-label="Xem chi tiết ${esc(p.name)}">${mockOf(p)}${p.shots&&p.shots.length>1?`<span class="nshots">🖼 ${p.shots.length} ảnh</span>`:''}</button>
     <div class="cbody">
       <div class="cmeta"><span class="field">${esc(p.field)}</span><span class="client">${esc(p.client)}</span></div>
       <h3>${esc(p.name)}</h3>
@@ -76,11 +77,12 @@ function render(){
   $('#cta-text').textContent=STUDIO.cta;
   $$('.credit-text').forEach(e=>e.textContent=STUDIO.credit);
 }
+let curId='';
 function openDetail(id){
-  const p=PRODUCTS.find(x=>x.id===id);if(!p)return;
+  const p=PRODUCTS.find(x=>x.id===id);if(!p)return;curId=id;
   $('#modal').innerHTML=`<div class="ov" data-close><div class="md" role="dialog" aria-modal="true" aria-labelledby="md-title" style="--c:${p.color}">
     <button class="x" data-close aria-label="Đóng">✕</button>
-    <div class="md-shot">${mockOf(p)}</div>
+    <div class="md-shot"><div id="md-main">${mockOf(p,0,false)}</div>${p.shots&&p.shots.length>1?`<div class="thumbs" role="tablist" aria-label="Ảnh giao diện">${p.shots.map((s,i)=>`<button class="th" data-shot="${i}" aria-selected="${i===0}" title="${esc(s[1])}"><img src="${esc(s[0])}" alt="" loading="lazy"><span>${esc(s[1])}</span></button>`).join('')}</div>`:''}</div>
     <div class="md-body">
       <div class="cmeta"><span class="field">${esc(p.field)}</span><span class="client">${esc(p.client)}</span></div>
       <h2 id="md-title">${esc(p.name)}</h2>
@@ -89,13 +91,14 @@ function openDetail(id){
       <h4>Tính năng chính</h4>
       <ul class="feat">${p.features.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>
       <div class="ctech">${p.tech.map(t=>`<span>${esc(t)}</span>`).join('')}</div>
-      <p class="note">Hình minh họa dùng dữ liệu mẫu. Tên khách hàng và dữ liệu thật được giữ kín.</p>
+      <p class="note">Ảnh chụp giao diện thật của app, chạy với <b>dữ liệu mẫu</b>: tên người, số điện thoại, số tiền đều là giả; logo và tên khách hàng đã được thay.</p>
     </div></div></div>`;
   document.body.classList.add('noscroll');
   setTimeout(()=>$('#modal .x')?.focus(),30);
 }
 function closeDetail(){$('#modal').innerHTML='';document.body.classList.remove('noscroll')}
 document.addEventListener('click',e=>{
+  const th=e.target.closest('[data-shot]');if(th){const p=PRODUCTS.find(x=>x.id===curId);if(p){$('#md-main').innerHTML=mockOf(p,+th.dataset.shot,false);$$('.th').forEach(b=>b.setAttribute('aria-selected',b===th))}return}
   const o=e.target.closest('[data-open]');if(o){openDetail(o.dataset.open);return}
   const c=e.target.closest('[data-close]');if(c&&(e.target===c||c.classList.contains('x'))){closeDetail();return}
   const f=e.target.closest('[data-f]');if(f){filter=f.dataset.f;render();$('#san-pham').scrollIntoView({behavior:'smooth',block:'start'})}

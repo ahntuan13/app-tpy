@@ -3,7 +3,8 @@
    - Muốn thêm / sửa sản phẩm: chỉ cần sửa mảng PRODUCTS bên dưới.
    - KHÔNG ghi tên khách hàng, logo, link app hay dữ liệu thật (bảo mật khách hàng).
    - mock: kiểu hình minh họa (dashboard | inventory | assets | crm | exam | cashflow | kanban)
-   - img (tuỳ chọn): đường dẫn ảnh chụp màn hình đã che dữ liệu, ví dụ 'img/kho.png' → thay cho hình minh họa.
+   - shots: danh sách ảnh chụp giao diện thật [đường dẫn, chú thích] – chụp với DỮ LIỆU GIẢ, đã thay logo / tên khách hàng.
+     Không có shots thì trang tự vẽ hình minh họa theo kiểu mock.
    ===================================================================== */
 const STUDIO={
   name:'3AE',
@@ -17,6 +18,7 @@ const STUDIO={
 const PRODUCTS=[
   {
     id:'kho',
+    shots:[['img/kho-1.jpg','Tổng quan kho'],['img/kho-2.jpg','Phiếu xuất kho in / PDF'],['img/kho-3.jpg','Thiết bị IT theo Serial'],['img/kho-4.jpg','Tồn kho nội bộ & hóa đơn']],
     name:'Quản lý Kho & Tài sản IT',
     field:'Kho & tài sản',
     client:'Công ty phân phối và bảo trì thiết bị IT',
@@ -39,6 +41,7 @@ const PRODUCTS=[
   },
   {
     id:'fa',
+    shots:[['img/fa-1.jpg','Trang chủ các chức năng'],['img/fa-2.jpg','Sổ tài sản cố định'],['img/fa-3.jpg','Ghi nhận thiết bị hỏng']],
     name:'Quản lý Tài sản cố định',
     field:'Kho & tài sản',
     client:'Doanh nghiệp kỹ thuật cơ điện',
@@ -59,6 +62,7 @@ const PRODUCTS=[
   },
   {
     id:'ot',
+    shots:[['img/ot-1.jpg','Tổng quan OT theo tuần'],['img/ot-2.jpg','Danh sách nhân viên & % giới hạn'],['img/ot-3.jpg','OT theo phòng ban'],['img/ot-4.jpg','So sánh giữa các kỳ']],
     name:'Theo dõi Tăng ca & Chuyên cần',
     field:'Nhân sự',
     client:'Phòng nhân sự của công ty kỹ thuật (7 phòng ban)',
@@ -80,6 +84,7 @@ const PRODUCTS=[
   },
   {
     id:'crm',
+    shots:[['img/crm-1.jpg','Tổng quan thẩm mỹ viện'],['img/crm-2.jpg','Hồ sơ khách & lộ trình điều trị'],['img/crm-3.jpg','Danh sách khách hàng'],['img/crm-4.jpg','Voucher & gợi ý giữ chân']],
     name:'CRM Chăm sóc khách hàng Thẩm mỹ viện',
     field:'Khách hàng & bán hàng',
     client:'Thẩm mỹ viện',
@@ -101,6 +106,7 @@ const PRODUCTS=[
   },
   {
     id:'cash',
+    shots:[['img/cash-1.jpg','Tổng quan dòng tiền'],['img/cash-2.jpg','Thu chi theo công trình'],['img/cash-3.jpg','Báo cáo lãi lỗ'],['img/cash-4.jpg','Lệnh thu / chi có duyệt']],
     name:'Dòng tiền, Hóa đơn & Bảng lương',
     field:'Tài chính & kế toán',
     client:'Doanh nghiệp thi công công trình',
@@ -123,6 +129,7 @@ const PRODUCTS=[
   },
   {
     id:'exam',
+    shots:[['img/exam-2.jpg','Chấm điểm tự động'],['img/exam-1.jpg','Màn hình làm bài có đếm giờ'],['img/exam-3.jpg','Danh sách ứng viên'],['img/exam-4.jpg','Trang chủ cổng thi']],
     name:'Cổng Thi tuyển dụng Kỹ sư',
     field:'Tuyển dụng',
     client:'Công ty kỹ thuật cơ điện (MEP)',
@@ -143,6 +150,7 @@ const PRODUCTS=[
   },
   {
     id:'pm',
+    shots:[['img/pm-1.jpg','Dashboard dòng tiền nhóm'],['img/pm-2.jpg','Phân chia công việc'],['img/pm-3.jpg','Danh sách dự án'],['img/pm-4.jpg','Sổ thu – chi']],
     name:'Quản lý Dự án & Dòng tiền nhóm',
     field:'Quản lý dự án',
     client:'Nhóm phát triển phần mềm (sản phẩm nội bộ 3AE)',

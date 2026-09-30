@@ -262,3 +262,18 @@ button{font:inherit;color:inherit;cursor:pointer}
   .cl1,.cl2{display:none}
   .cl0{position:relative;width:100%;transform:none}
 }
+
+/* ---------- ảnh chụp giao diện thật ---------- */
+.shotf{background:#fff}
+.shotf .m-img{display:block;width:100%;height:auto;border:0;border-radius:0;aspect-ratio:16/10;object-fit:cover;object-position:top left;background:#f3f5fa}
+.shot{position:relative}
+.nshots{position:absolute;right:30px;bottom:12px;font-size:12px;font-weight:600;color:#fff;background:rgba(20,22,52,.72);padding:3px 10px;border-radius:99px;backdrop-filter:blur(4px)}
+.md-shot .shotf .m-img{aspect-ratio:auto;object-fit:contain;max-height:62vh}
+.thumbs{display:flex;gap:10px;overflow-x:auto;padding:14px 0 16px}
+.th{flex:0 0 150px;border:2px solid transparent;background:#fff;border-radius:10px;padding:0;overflow:hidden;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.th img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top left}
+.th span{display:block;font-size:11.5px;color:var(--ink2);padding:5px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.th[aria-selected="true"]{border-color:var(--c)}
+.th:hover{border-color:color-mix(in srgb,var(--c) 50%,transparent)}
+.cl .shotf .m-img{aspect-ratio:16/10}
+@media (max-width:620px){.th{flex-basis:120px}.nshots{right:20px}}

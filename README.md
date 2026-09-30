@@ -83,7 +83,7 @@ Với Firebase, quyền được kiểm tra ở máy chủ bằng `firestore.rul
 - Link gửi khách: **https://ahntuan13.github.io/taytrai/gioi-thieu/** – không cần đăng nhập, không liên quan dữ liệu trong app.
 - Nội dung sản phẩm: `gioi-thieu/san-pham.js` (không ghi tên khách hàng, link app hay dữ liệu thật).
 - Giao diện: `gioi-thieu/style.css`, hình minh họa vẽ bằng dữ liệu mẫu trong `gioi-thieu/app.js`.
-- Muốn dùng ảnh chụp thật: đặt ảnh (đã che dữ liệu) vào `gioi-thieu/img/` rồi điền `img:'img/ten-anh.png'` cho sản phẩm.
+- Ảnh giao diện: `gioi-thieu/img/` – chụp từ app thật chạy với **dữ liệu giả** (tên, SĐT, số tiền giả; logo và tên khách đã thay). Khai báo trong trường `shots` của từng sản phẩm.
 - Mở thẳng một sản phẩm: thêm `#id` vào link, ví dụ `…/gioi-thieu/#crm`.
 
 ## Sao lưu đám mây
