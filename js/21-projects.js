@@ -9,19 +9,20 @@ function prjListPage(pricing){
     head(){return `<div class="bar">${fSearch('Tìm tên, mã, khách hàng…')}${fSel('status','Trạng thái',[['','Mọi trạng thái'],...Object.entries(PSTATUS).map(([k,v])=>[k,v[1]])])}${fSel('pf','Nền tảng',[['','Mọi nền tảng'],...PLATFORMS.map(x=>[x,x])])}<label class="fl">Năm ${fSel('year','Năm',yearOpts('Tất cả'))}</label><div class="sp"></div><button class="btn" data-act="export" data-name="du-an">⬇ Excel</button>${can('write')?`<button class="btn acc" data-act="prj-new" data-pricing="${pricing||''}">＋ Thêm dự án</button>`:''}</div>${pricing?`<p class="note" style="margin-top:-6px">${esc(PRICING[pricing][2])}.</p>`:''}`},
     tbl(){
       const f=F(),q=norm(f.q),y=f.year||'';
-      const rows=db.projects.filter(p=>(!pricing||p.pricing===pricing)&&(!f.status||p.status===f.status)&&(!f.pf||pfList(p).includes(f.pf))&&(!q||norm(`${p.code} ${p.name} ${p.customer||''} ${pfText(p)}`).includes(q))).map(p=>({p,s:prjStats(p,y)}));
+      const rows=db.projects.filter(p=>(!pricing||p.pricing===pricing)&&(!f.status||p.status===f.status)&&(!f.pf||pfList(p).includes(f.pf))&&(!q||norm(`${p.code} ${p.name} ${p.customer||''} ${pfText(p)} ${p.link||''}`).includes(q))).map(p=>({p,s:prjStats(p,y)}));
       const T=k=>r2(rows.reduce((a,r)=>a+r.s[k],0));
       return table([
         {h:'Mã',f:r=>`<span style="white-space:nowrap">${esc(r.p.code)}</span>`,x:r=>r.p.code},
         {h:'Dự án / App',f:r=>`${prjLink(r.p)}${r.p.customer?`<small>${esc(r.p.customer)}</small>`:''}`,x:r=>r.p.name},
         {h:'Nền tảng',f:r=>pfTags(r.p),x:r=>pfText(r.p)},
+        {h:'Link',f:r=>linkHTML(r.p.link),x:r=>r.p.link?normUrl(r.p.link):''},
         {h:'Loại hình',f:r=>pricingBd(r.p.pricing),x:r=>PRICING[r.p.pricing]?.[1]},
         {h:'Trạng thái',f:r=>statusBd(r.p.status),x:r=>PSTATUS[r.p.status]?.[1]},
         {h:'Tiến độ',f:r=>pgBar(r.s.pct),x:r=>r.s.pct+'%'},
         nc('Tiền về',r=>r.s.inn,fmtMoney),nc('Chi ra',r=>r.s.out,fmtMoney),
         {h:'Ròng',c:'num',f:r=>sgn(r.s.net),x:r=>r.s.net},
         actCol(r=>`<a class="btn sm" href="#/prj/${r.p.id}">Mở</a>${can('write')?` <button class="btn sm" data-act="prj-edit" data-id="${r.p.id}">Sửa</button>`:''}`)
-      ],rows,{empty:'Chưa có dự án nào. Bấm “＋ Thêm dự án” để bắt đầu.',foot:rows.length?`<tr><td colspan="6">Tổng ${rows.length} dự án${y?' · năm '+y:''}</td><td class="num">${fmtMoney(T('inn'))}</td><td class="num">${fmtMoney(T('out'))}</td><td class="num">${sgn(T('net'))}</td><td></td></tr>`:''});
+      ],rows,{empty:'Chưa có dự án nào. Bấm “＋ Thêm dự án” để bắt đầu.',foot:rows.length?`<tr><td colspan="7">Tổng ${rows.length} dự án${y?' · năm '+y:''}</td><td class="num">${fmtMoney(T('inn'))}</td><td class="num">${fmtMoney(T('out'))}</td><td class="num">${sgn(T('net'))}</td><td></td></tr>`:''});
     }};
 }
 PAGES['prj/list']=prjListPage('');
@@ -46,7 +47,7 @@ function prjPage(p){return{t:p.name,
     const recov=p.budget?Math.round(s.net/p.budget*100):null;
     return `<p class="note" style="padding-top:0"><a href="#/prj/list">← Tất cả dự án</a></p>
     <section class="card"><div class="hdr"><div><div class="tags">${pricingBd(p.pricing)}${statusBd(p.status)}${pfTags(p)}</div><h2>${esc(p.name)}</h2>
-      <p>${esc(p.code)}${p.customer?' · Khách hàng: '+esc(p.customer):''}${p.start?' · '+fmtDate(p.start)+(p.end?' → '+fmtDate(p.end):''):''}</p>
+      <p>${esc(p.code)}${p.link?' · '+linkHTML(p.link):''}${p.customer?' · Khách hàng: '+esc(p.customer):''}${p.start?' · '+fmtDate(p.start)+(p.end?' → '+fmtDate(p.end):''):''}</p>
       ${p.description?`<p class="desc">${esc(p.description)}</p>`:''}</div>
       ${w?`<div class="acts"><button class="btn danger" data-act="prj-del" data-id="${p.id}">Xoá</button><button class="btn" data-act="prj-edit" data-id="${p.id}">Sửa thông tin</button><button class="btn" data-act="tx-new" data-kind="out" data-project="${p.id}">＋ Khoản chi</button><button class="btn acc" data-act="tx-new" data-kind="in" data-project="${p.id}">＋ Tiền về</button></div>`:''}</div></section>
     <div class="kpis">${kpi('Tiền về',vnd(s.inn),`có HĐ ${fmtMoney(s.innInv)} · không HĐ ${fmtMoney(s.innNo)}`,'ok')}${kpi('Chi ra',vnd(s.out),`${s.txs.filter(txOut).length} khoản chi`,'warn')}${kpi('Lợi nhuận ròng',`<span class="${s.net>=0?'':'neg'}">${vnd(s.net)}</span>`,recov!==null?`thu hồi ${recov}% vốn dự kiến`:'','acc')}${kpi('Vốn dự kiến',p.budget?vnd(p.budget):'—','','info')}${kpi('Tiến độ',s.pct+'%',`${s.done}/${s.phases} giai đoạn · ${s.open} việc mở`,s.late?'bad':'ok')}</div>
@@ -66,11 +67,12 @@ const memPicker=v=>`<div class="f full"><span>Giao cho</span><div class="pick">$
 function modesHTML(v){return `<div class="f full"><span>Loại hình <i>*</i></span><div class="modes">${Object.entries(PRICING).map(([k,x])=>`<label class="mode ${v===k?'on':''}"><span><input type="radio" name="pricing" value="${k}" ${v===k?'checked':''}> <b>${x[1]}</b></span><small>${x[2]}</small></label>`).join('')}</div></div>`}
 document.addEventListener('change',e=>{if(e.target.name==='pricing'){$$('.mode',e.target.closest('.modes')).forEach(m=>m.classList.toggle('on',m.contains(e.target)))}});
 function prjForm(id,preset){
-  const p=id?prjOf(id):{name:'',platforms:[],customer:'',pricing:preset||'inv',status:'dev',start:todayStr(),end:'',budget:0,description:''};
+  const p=id?prjOf(id):{name:'',link:'',platforms:[],customer:'',pricing:preset||'inv',status:'dev',start:todayStr(),end:'',budget:0,description:''};
   modal(id?'Sửa dự án':'Thêm dự án mới',`<form id="mf" data-submit="prj-save" data-id="${id||''}"><div class="fg">
     ${inp('name','Tên App / dự án',p.name,{req:1,full:1,ph:'VD: App đặt lịch spa'})}
     ${modesHTML(p.pricing)}
     ${pfPicker(pfList(p))}
+    ${inp('link','Link website / app (nếu có)',p.link||'',{full:1,ph:'https://… – có thể để trống, dán vào sau',attrs:'inputmode="url" autocomplete="url"'})}
     ${inp('customer','Khách hàng / đối tác',p.customer)}${sel('status','Trạng thái',Object.entries(PSTATUS).map(([k,v])=>[k,v[1]]),p.status)}
     ${inp('start','Ngày bắt đầu',p.start,{type:'date'})}${inp('end','Dự kiến kết thúc',p.end,{type:'date'})}
     ${inp('budget','Vốn dự kiến (VND)',p.budget?fmtPrice(p.budget):'',{attrs:'inputmode="decimal" data-num="money"'})}
@@ -87,7 +89,7 @@ SUB['prj-save']=form=>{
     let p=id?prjOf(id):null;
     if(!p){p={id:uid('p'),code:nextCode('DA'),createdAt:Date.now(),phases:d.phases?DEFAULT_PHASES.map((n,i)=>({id:uid('ph')+i,name:n,status:i?'todo':'doing',start:'',end:'',amount:0,note:''})):[],tasks:[]};db.projects.unshift(p);pid=p.id}
     const pfs=new FormData(form).getAll('pf');
-    Object.assign(p,{name:d.name.trim(),pricing:d.pricing||'free',platforms:pfs,platform:pfs.join(' · '),customer:d.customer.trim(),status:d.status,start:d.start,end:d.end,budget:r2(evalMoney(d.budget)),description:d.description.trim(),updatedAt:Date.now()});
+    Object.assign(p,{link:normUrl(d.link),name:d.name.trim(),pricing:d.pricing||'free',platforms:pfs,platform:pfs.join(' · '),customer:d.customer.trim(),status:d.status,start:d.start,end:d.end,budget:r2(evalMoney(d.budget)),description:d.description.trim(),updatedAt:Date.now()});
   });
   if(!ok)return;
   closeModal();toast(id?'Đã lưu':'Đã tạo dự án');

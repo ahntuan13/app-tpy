@@ -37,6 +37,8 @@ Các file `js/` được nạp **theo thứ tự số** (file sau dùng hàm c�
 - **Giai đoạn** cho từng App (cả nhóm làm chung: ngày, số tiền thu theo đợt, trạng thái). Tạo dự án mới có thể tạo sẵn 5 giai đoạn mẫu.
 - **Công việc**: giao cho Tuấn / Phúc / Yến bằng nút chọn, gắn giai đoạn, hạn; bảng cột theo từng người; cảnh báo trễ hạn trên menu.
 - **Dòng tiền**: phiếu thu (PT-xxxx) / phiếu chi (PC-xxxx), có / không hóa đơn + số hóa đơn, người nhận / chi. Chọn dự án thì ô hóa đơn tự gợi ý theo loại hình.
+  - Tiền về chọn mục **Quỹ** khi thành viên đóng góp (không tính vào doanh thu dự án); khoản chi chọn mục **Khác** khi là chi đầu tư chung không thuộc dự án nào.
+- **Link**: mỗi dự án lưu link website / app (dán vào khi có), hiện ở danh sách và trang chi tiết.
 - **Dashboard**: tiền về, chi ra, lợi nhuận ròng, tỷ lệ có HĐ, biểu đồ dòng tiền theo tháng, tiến độ các App, công việc của từng người, việc sắp tới hạn.
 - Xuất **Excel**, **PDF**, **In** ở mọi báo cáo; **sao lưu / khôi phục JSON**.
 
@@ -90,4 +92,4 @@ Khi bật Firebase, app **tự động sao lưu mỗi ngày** (lần đầu mộ
 - Tiền tệ là VND; ô số tiền gõ được kiểu `15.000.000` hoặc phép tính (`500000/1.08`).
 
 ---
-🔧 Developed by Ahn Tuan (chỉ dùng trong nội bộ)
+🔧 Developed by 3AE (chỉ dùng trong nội bộ)

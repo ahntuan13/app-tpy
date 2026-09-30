@@ -23,8 +23,8 @@ const curYear=()=>String(new Date().getFullYear());
 function monthlyFlow(months){
   return months.map(mk=>{
     const txs=db.transactions.filter(t=>(t.date||'').slice(0,7)===mk);
-    const inInv=sumAmt(txs.filter(t=>txIn(t)&&t.invoice==='inv')),inNo=sumAmt(txs.filter(t=>txIn(t)&&t.invoice!=='inv')),out=sumAmt(txs.filter(txOut));
-    return{mk,inInv,inNo,inn:r2(inInv+inNo),out,net:r2(inInv+inNo-out),n:txs.length};
+    const inInv=sumAmt(txs.filter(t=>txRev(t)&&t.invoice==='inv')),inNo=sumAmt(txs.filter(t=>txRev(t)&&t.invoice!=='inv')),out=sumAmt(txs.filter(txOut)),fund=sumAmt(txs.filter(t=>t.kind==='in'&&isFund(t)));
+    return{mk,inInv,inNo,inn:r2(inInv+inNo),fund,out,net:r2(inInv+inNo-out),n:txs.length};
   });
 }
 
@@ -33,20 +33,22 @@ PAGES['dash/overview']={t:'Tổng quan',
   head(){F().year??=curYear();return `<div class="bar"><label class="fl">Năm ${fSel('year','Năm',yearOpts())}</label><div class="sp"></div>${can('write')?'<button class="btn" data-act="tx-new" data-kind="out">＋ Khoản chi</button><button class="btn acc" data-act="tx-new" data-kind="in">＋ Ghi tiền về</button>':''}</div>`},
   tbl(){
     const y=F().year||curYear(),txs=db.transactions.filter(t=>inYear(t,y));
-    const inn=sumAmt(txs.filter(txIn)),out=sumAmt(txs.filter(txOut)),net=r2(inn-out),inInv=sumAmt(txs.filter(t=>txIn(t)&&t.invoice==='inv')),inNo=r2(inn-inInv);
+    const inn=sumAmt(txs.filter(txRev)),out=sumAmt(txs.filter(txOut)),net=r2(inn-out),inInv=sumAmt(txs.filter(t=>txRev(t)&&t.invoice==='inv')),inNo=r2(inn-inInv);
+    const fund=sumAmt(txs.filter(t=>t.kind==='in'&&isFund(t))),outOther=sumAmt(txs.filter(t=>txOut(t)&&t.projectId===OTHER));
+    const allIn=sumAmt(db.transactions.filter(txIn)),allOut=sumAmt(db.transactions.filter(txOut)),cash=r2(allIn-allOut);
     const act=db.projects.filter(p=>p.status==='dev'||p.status==='live').length,late=allTasks().filter(isLate).length;
     const cnt={};Object.keys(PRICING).forEach(k=>cnt[k]=0);db.projects.forEach(p=>cnt[PRICING[p.pricing]?p.pricing:'free']++);const tot=db.projects.length||1;
     const recent=[...txs].sort(byDateDesc).slice(0,7);
     const soon=allTasks().filter(t=>!t.done).sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999')).slice(0,7);
-    return `<div class="kpis">${kpi('Dự án / App',fmtNum(db.projects.length),`${act} đang phát triển / vận hành`)}${kpi(`Tiền về ${y}`,vnd(inn),`${txs.filter(txIn).length} khoản thu`,'ok')}${kpi(`Chi ra ${y}`,vnd(out),`${txs.filter(txOut).length} khoản chi`,'warn')}${kpi('Lợi nhuận ròng',`<span class="${net>=0?'':'neg'}">${vnd(net)}</span>`,inn?`biên lợi nhuận ${Math.round(net/inn*100)}%`:'chưa có tiền về','acc')}${kpi('Tiền về có hóa đơn',vnd(inInv),inn?Math.round(inInv/inn*100)+'% tổng tiền về':'','info')}${kpi('Tiền về không hóa đơn',vnd(inNo),inn?Math.round(inNo/inn*100)+'% tổng tiền về':'')}${kpi('Việc trễ hạn',late,late?'<a href="#/task/late">Xem danh sách</a>':'không có việc trễ',late?'bad':'ok')}</div>
+    return `<div class="kpis k4">${kpi(`Tiền về từ dự án ${y}`,vnd(inn),`${txs.filter(txRev).length} khoản thu`,'ok')}${kpi(`Chi ra ${y}`,vnd(out),`${txs.filter(txOut).length} khoản chi${outOther?` · chi khác ${fmtMoney(outOther)}`:''}`,'warn')}${kpi('Lợi nhuận ròng',`<span class="${net>=0?'':'neg'}">${vnd(net)}</span>`,inn?`biên lợi nhuận ${Math.round(net/inn*100)}%`:'chưa có tiền về','acc')}${kpi('Tồn quỹ hiện tại',`<span class="${cash>=0?'':'neg'}">${vnd(cash)}</span>`,'tổng tiền về (gồm quỹ) − tổng chi, từ trước đến nay','info')}${kpi('Tiền về có hóa đơn',vnd(inInv),inn?Math.round(inInv/inn*100)+'% tổng tiền về':'','info')}${kpi('Tiền về không hóa đơn',vnd(inNo),inn?Math.round(inNo/inn*100)+'% tổng tiền về':'')}${kpi(`Quỹ thành viên đóng ${y}`,vnd(fund),'không tính vào doanh thu dự án','acc')}${kpi('Việc trễ hạn',late,late?'<a href="#/task/late">Xem danh sách</a>':'không có việc trễ',late?'bad':'ok')}</div>
     <div class="grid g2">${card(`Dòng tiền theo tháng – ${y}`,'<div class="ch"><canvas id="c1"></canvas></div>')}${card('Tiền về theo hóa đơn','<div class="ch"><canvas id="c2"></canvas></div>')}</div>
     <div class="grid g3">
-      ${card('Loại hình dự án',`<div class="split">${Object.keys(PRICING).map(k=>`<i style="width:${cnt[k]/tot*100}%;background:${PR_COLOR[k]}"></i>`).join('')}</div><div class="lst" style="margin-top:10px">${Object.keys(PRICING).map(k=>`<div><a href="#/prj/${k}" style="text-decoration:none">${pricingBd(k)}</a><b>${cnt[k]} dự án</b></div>`).join('')}</div>`)}
+      ${card(`Loại hình dự án · ${db.projects.length} dự án (${act} đang chạy)`,`<div class="split">${Object.keys(PRICING).map(k=>`<i style="width:${cnt[k]/tot*100}%;background:${PR_COLOR[k]}"></i>`).join('')}</div><div class="lst" style="margin-top:10px">${Object.keys(PRICING).map(k=>`<div><a href="#/prj/${k}" style="text-decoration:none">${pricingBd(k)}</a><b>${cnt[k]} dự án</b></div>`).join('')}</div>`)}
       ${card('Công việc của 3 anh em',`<div class="lst">${members().map(m=>{const ts=allTasks().filter(t=>t.owner===m.id&&!t.done),lt=ts.filter(isLate).length;return `<div><span class="mem">${memAv(m.id)}<span><b>${esc(m.name)}</b><small>${ts.length} việc đang làm</small></span></span>${lt?badge('bad',lt+' trễ hạn'):badge('ok','Đúng hạn')}</div>`}).join('')}</div><p class="note"><a href="#/task/board">Mở bảng phân chia công việc →</a></p>`)}
       ${card('Tiến độ các App',db.projects.length?`<div class="lst">${db.projects.slice(0,6).map(p=>{const s=prjStats(p);return `<div style="display:block"><div style="display:flex;justify-content:space-between;gap:8px">${prjLink(p)}<small class="muted">${s.cur?esc(s.cur.name):(s.phases?'Hoàn tất':'Chưa chia giai đoạn')}</small></div>${pgBar(s.pct)}</div>`}).join('')}</div>`:'<div class="note">Chưa có dự án nào.</div>')}
     </div>
     <div class="grid g2">
-      ${card('Giao dịch gần đây',miniTable(['Số phiếu','Ngày','Dự án / nội dung','Hóa đơn','Số tiền'],recent.map(t=>`<tr><td><button class="lnk" data-act="tx-edit" data-id="${t.id}">${esc(t.code||'—')}</button></td><td>${fmtDate(t.date)}</td><td>${prjLink(prjOf(t.projectId))}<small>${esc(t.note||'')}</small></td><td>${invBd(t)}</td><td class="num">${txIn(t)?sgn(+t.amount):sgn(-t.amount)}</td></tr>`),'Chưa có giao dịch trong năm.'))}
+      ${card('Giao dịch gần đây',miniTable(['Số phiếu','Ngày','Dự án / nội dung','Hóa đơn','Số tiền'],recent.map(t=>`<tr><td><button class="lnk" data-act="tx-edit" data-id="${t.id}">${esc(t.code||'—')}</button></td><td>${fmtDate(t.date)}</td><td>${SPECIAL[t.projectId]?`<b>${prjName(t.projectId)}</b>`:prjLink(prjOf(t.projectId))}<small>${esc(t.note||'')}</small></td><td>${invBd(t)}</td><td class="num">${txIn(t)?sgn(+t.amount):sgn(-t.amount)}</td></tr>`),'Chưa có giao dịch trong năm.'))}
       ${card('Việc sắp tới hạn',miniTable(['','Công việc / dự án','Người làm','Hạn'],soon.map(t=>`<tr><td><input type="checkbox" class="cb-done" data-act="task-done" data-p="${t.projectId}" data-t="${t.id}" ${can('write')?'':'disabled'} aria-label="Đánh dấu xong"></td><td>${esc(t.title)}<small>${esc(t.p.name)}</small></td><td><span class="mem">${memAv(t.owner)}${esc(memName(t.owner))}</span></td><td style="white-space:nowrap">${t.due?(isLate(t)?badge('bad','Trễ · '+fmtDate(t.due)):fmtDate(t.due)):'—'}</td></tr>`),'Không còn việc nào đang mở.'))}
     </div>`;
   },
@@ -59,7 +61,7 @@ PAGES['dash/overview']={t:'Tổng quan',
       {type:'bar',label:'Tiền về không HĐ',data:fl.map(x=>x.inNo),backgroundColor:CC.inNo,stack:'in',order:1},
       {type:'bar',label:'Chi ra',data:fl.map(x=>x.out),backgroundColor:CC.out,stack:'out',order:1}]},
       options:baseOpt({scales:{y:{beginAtZero:true,ticks:{callback:v=>fmtNum(v/1e6)+' tr'}}},plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtMoney(c.raw)} ₫`}}}})});
-    const txs=db.transactions.filter(t=>txIn(t)&&inYear(t,y)),a=sumAmt(txs.filter(t=>t.invoice==='inv')),b=sumAmt(txs.filter(t=>t.invoice!=='inv'));
+    const txs=db.transactions.filter(t=>txRev(t)&&inYear(t,y)),a=sumAmt(txs.filter(t=>t.invoice==='inv')),b=sumAmt(txs.filter(t=>t.invoice!=='inv'));
     chart('c2',{type:'doughnut',data:{labels:['Có hóa đơn','Không hóa đơn'],datasets:[{data:[a,b],backgroundColor:[CC.inInv,CC.inNo],borderWidth:0,spacing:3}]},options:baseOpt({cutout:'62%',plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>` ${c.label}: ${fmtMoney(c.raw)} ₫`}}}})});
   }};
 
@@ -67,14 +69,14 @@ PAGES['dash/overview']={t:'Tổng quan',
 function monthTable(y){
   const fl=monthlyFlow(monthsOfYear(y));let run=0;fl.forEach(x=>x.cum=(run=r2(run+x.net)));
   const t=k=>r2(fl.reduce((a,x)=>a+x[k],0));
-  const cols=[{h:'Tháng',f:r=>`${r.mk.slice(5)}/${r.mk.slice(0,4)}`},nc('Số giao dịch',r=>r.n),nc('Tiền về có HĐ',r=>r.inInv,fmtMoney),nc('Tiền về không HĐ',r=>r.inNo,fmtMoney),nc('Tổng tiền về',r=>r.inn,fmtMoney),nc('Chi ra',r=>r.out,fmtMoney),{h:'Ròng',c:'num',f:r=>sgn(r.net),x:r=>r.net},{h:'Lũy kế',c:'num',f:r=>sgn(r.cum),x:r=>r.cum}];
-  return table(cols,fl,{foot:`<tr><td>Tổng</td><td class="num">${fl.reduce((a,x)=>a+x.n,0)}</td><td class="num">${fmtMoney(t('inInv'))}</td><td class="num">${fmtMoney(t('inNo'))}</td><td class="num">${fmtMoney(t('inn'))}</td><td class="num">${fmtMoney(t('out'))}</td><td class="num">${sgn(t('net'))}</td><td></td></tr>`});
+  const cols=[{h:'Tháng',f:r=>`${r.mk.slice(5)}/${r.mk.slice(0,4)}`},nc('Số giao dịch',r=>r.n),nc('Tiền về có HĐ',r=>r.inInv,fmtMoney),nc('Tiền về không HĐ',r=>r.inNo,fmtMoney),nc('Tổng tiền về dự án',r=>r.inn,fmtMoney),nc('Quỹ đóng góp',r=>r.fund,fmtMoney),nc('Chi ra',r=>r.out,fmtMoney),{h:'Ròng',c:'num',f:r=>sgn(r.net),x:r=>r.net},{h:'Lũy kế',c:'num',f:r=>sgn(r.cum),x:r=>r.cum}];
+  return table(cols,fl,{foot:`<tr><td>Tổng</td><td class="num">${fl.reduce((a,x)=>a+x.n,0)}</td><td class="num">${fmtMoney(t('inInv'))}</td><td class="num">${fmtMoney(t('inNo'))}</td><td class="num">${fmtMoney(t('inn'))}</td><td class="num">${fmtMoney(t('fund'))}</td><td class="num">${fmtMoney(t('out'))}</td><td class="num">${sgn(t('net'))}</td><td></td></tr>`});
 }
 PAGES['dash/cash']={t:'Dòng tiền theo tháng',
   head(){F().year??=curYear();return `<div class="bar"><label class="fl">Năm ${fSel('year','Năm',yearOpts())}</label><div class="sp"></div><button class="btn" data-act="export" data-name="dong-tien-theo-thang">⬇ Excel</button></div>`},
   tbl(){const y=F().year||curYear();return `<div class="card"><h4>Tiền về và chi ra năm ${y} (VND)</h4><div class="ch"><canvas id="c1"></canvas></div></div>${monthTable(y)}`},
   tm(){const y=F().year||curYear(),fl=monthlyFlow(monthsOfYear(y));
-    chart('c1',{type:'bar',data:{labels:fl.map(x=>'T'+(+x.mk.slice(5))),datasets:[{label:'Tiền về',data:fl.map(x=>x.inn),backgroundColor:CC.in},{label:'Chi ra',data:fl.map(x=>x.out),backgroundColor:CC.out}]},options:baseOpt({scales:{y:{beginAtZero:true,ticks:{callback:v=>fmtNum(v/1e6)+' tr'}}}})})}};
+    chart('c1',{type:'bar',data:{labels:fl.map(x=>'T'+(+x.mk.slice(5))),datasets:[{label:'Tiền về dự án',data:fl.map(x=>x.inn),backgroundColor:CC.in},{label:'Quỹ đóng góp',data:fl.map(x=>x.fund),backgroundColor:'#9b7bf0'},{label:'Chi ra',data:fl.map(x=>x.out),backgroundColor:CC.out}]},options:baseOpt({scales:{y:{beginAtZero:true,ticks:{callback:v=>fmtNum(v/1e6)+' tr'}}}})})}};
 
 /* ---------- Tiến độ các App ---------- */
 PAGES['dash/progress']={t:'Tiến độ các App',

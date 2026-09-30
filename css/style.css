@@ -372,3 +372,13 @@ a{color:#4b4fc2}
 @media (max-width:900px){.page-foot{padding:12px 14px 18px}}
 @media print{.page-foot,.side-credit,.login-credit{display:none}}
 .lcard .lm{align-self:flex-start;height:48px;border-radius:12px}
+
+/* ---------- link dự án, mục Quỹ / Khác ---------- */
+a.ext{display:inline-flex;align-items:center;gap:3px;font-size:12.5px;font-weight:500;color:#2f7de1;text-decoration:none;white-space:nowrap;max-width:210px;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
+a.ext:hover{text-decoration:underline}
+.sp-tag{display:inline-block;font-size:12px;font-weight:700;padding:1px 9px;border-radius:99px}
+.sp-tag.fund{background:#efe9ff;color:#6c4fd8}.sp-tag.other{background:#e7f0fb;color:#2f6fbf}
+.kpis.k4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:1100px){.kpis.k4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.kpis.k4{grid-template-columns:1fr}}
+.pk .av{line-height:1;flex:none}

@@ -21,6 +21,7 @@ SUB['mem-save']=form=>{
   if(transact(()=>{if(!db.members.length)db.members=defaultDB().members;let m=id?by(db.members,id):null;if(!m){m={id:uid('m')};db.members.push(m)}Object.assign(m,{name:d.name.trim(),phone:d.phone.trim(),bank:d.bank.trim(),note:d.note.trim()});delete m.share}))done();
 };
 ACT['mem-del']=el=>{
+  if(CORE_MEMBERS().some(c=>c.id===el.dataset.id))return toast('Tuấn, Phúc, Yến là 3 thành viên cố định, không xoá được (có thể đổi tên).','error');
   const id=el.dataset.id,used=db.transactions.some(t=>t.memberId===id)||db.projects.some(p=>(p.tasks||[]).some(t=>t.owner===id));
   if(used)return toast('Thành viên đã có giao dịch / công việc, không thể xoá. Có thể đổi tên thay vì xoá.','error');
   if(confirm('Xoá thành viên này?'))transact(()=>{db.members=db.members.filter(m=>m.id!==id)})&&done('Đã xoá');

@@ -40,10 +40,11 @@ function migrate(){const d=defaultDB();for(const k in d){if(db[k]===undefined)db
   /* Đổi tên mặc định cũ (Anh Hai / Anh Ba / Út) → Tuấn / Phúc / Yến; đổi tên nhóm mặc định cũ */
   const OLD={m1:['Anh Hai','Tuấn'],m2:['Anh Ba','Phúc'],m3:['Út','Yến']};
   db.members.forEach(m=>{const o=OLD[m.id];if(o&&m.name===o[0])m.name=o[1]});
-  if(db.company&&db.company.name==='3AE – Đầu tư App')db.company.name='3AE · AI App Studio'}
+  if(db.company&&db.company.name==='3AE – Đầu tư App')db.company.name='3AE · AI App Studio';
+  ensureMembers()}
 function migrateAll(){return false}
 /* Có cần ghi lại sau khi migrate không (dùng ở chế độ Firebase) */
-function needsMigrate(){const OLD={m1:'Anh Hai',m2:'Anh Ba',m3:'Út'};return db.members.some(m=>OLD[m.id]===m.name)||db.company?.name==='3AE – Đầu tư App'||db.projects.some(p=>!Array.isArray(p.platforms))}
+function needsMigrate(){if(CORE_MEMBERS().some(c=>!db.members.some(m=>m.id===c.id)))return true;const OLD={m1:'Anh Hai',m2:'Anh Ba',m3:'Út'};return db.members.some(m=>OLD[m.id]===m.name)||db.company?.name==='3AE – Đầu tư App'||db.projects.some(p=>!Array.isArray(p.platforms))}
 function load(){if(CLOUD){db=emptyCloudDB();migrate();return}try{const raw=localStorage.getItem(LS_KEY);db=raw?JSON.parse(raw):defaultDB()}catch(e){db=defaultDB()}migrate()}
 function save(){if(CLOUD){cloudPush();return}try{localStorage.setItem(LS_KEY,JSON.stringify(db))}catch(e){toast('Không lưu được dữ liệu (bộ nhớ trình duyệt đầy?). Hãy xuất sao lưu ngay.','error')}}
 /* Thực hiện thay đổi an toàn: lỗi thì trả lại dữ liệu cũ */
@@ -53,13 +54,28 @@ const nextCode=(k,len=3)=>{db.seq[k]=(db.seq[k]||0)+1;return `${k}-${String(db.s
 /* ---------- truy vấn nhanh ---------- */
 const by=(a,id)=>a.find(x=>x.id===id);
 const nm=(arr,id,f='name')=>{const o=by(arr,id);return o?(o[f]??''):'—'};
-const members=()=>db.members.length?db.members:defaultDB().members;
+/* Luôn đủ 3 thành viên cố định Tuấn – Phúc – Yến (m1, m2, m3) + thành viên thêm sau (nếu có) */
+const CORE_MEMBERS=()=>defaultDB().members;
+function ensureMembers(){const have=new Set(db.members.map(m=>m.id));let ch=false;CORE_MEMBERS().forEach((m,i)=>{if(!have.has(m.id)){db.members.splice(Math.min(i,db.members.length),0,{...m});ch=true}});return ch}
+const members=()=>{const core=CORE_MEMBERS(),extra=db.members.filter(m=>!core.some(c=>c.id===m.id));return[...core.map(c=>db.members.find(m=>m.id===c.id)||c),...extra]};
 const memName=id=>{const m=by(members(),id);return m?m.name:'Chưa giao'};
 const memColor=id=>{const i=members().findIndex(m=>m.id===id);return i>=0?MEM_COLORS[i%MEM_COLORS.length]:'#8494a8'};
 const memAv=(id,cls='av')=>`<span class="${cls}" style="background:${memColor(id)}">${esc((memName(id).trim().split(/\s+/).pop()||'?').charAt(0).toUpperCase())}</span>`;
 const memOpts=(blank)=>[...(blank!==undefined?[['',blank]]:[]),...members().map(m=>[m.id,m.name])];
 const prjOf=id=>by(db.projects,id);
-const prjName=id=>{const p=prjOf(id);return p?p.name:'(đã xoá)'};
+/* Mục đặc biệt không thuộc dự án: Quỹ (tiền về do thành viên đóng góp) và Khác (khoản chi đầu tư chung) */
+const FUND='_fund',OTHER='_other';
+const SPECIAL={[FUND]:['Quỹ','Thành viên đóng góp, không thuộc dự án'],[OTHER]:['Khác','Chi đầu tư chung, không thuộc dự án']};
+const isFund=t=>t.projectId===FUND;
+const txRev=t=>t.kind==='in'&&!isFund(t);
+const prjName=id=>{if(SPECIAL[id])return SPECIAL[id][0];const p=prjOf(id);return p?p.name:'(đã xoá)'};
+const txPrjLink=id=>SPECIAL[id]?`<span class="sp-tag ${id===FUND?'fund':'other'}">${SPECIAL[id][0]}</span><small>${SPECIAL[id][1]}</small>`:prjLink(prjOf(id));
+const txPrjOpts=kind=>[...db.projects.map(p=>[p.id,`${p.code} · ${p.name}`]),kind==='out'?[OTHER,'Khác – chi đầu tư chung (không thuộc dự án)']:[FUND,'Quỹ – thành viên đóng góp (không thuộc dự án)']];
+const txFilterOpts=()=>[['','Tất cả dự án'],...db.projects.map(p=>[p.id,`${p.code} · ${p.name}`]),[FUND,'Quỹ (thành viên đóng góp)'],[OTHER,'Khác (đầu tư chung)']];
+/* Link website của dự án */
+const normUrl=u=>{u=String(u||'').trim();if(!u)return'';return /^https?:\/\//i.test(u)?u:'https://'+u};
+const urlHost=u=>{try{return new URL(normUrl(u)).host.replace(/^www\./,'')}catch(e){return u}};
+const linkHTML=u=>u?`<a class="ext" href="${esc(normUrl(u))}" target="_blank" rel="noopener noreferrer" title="${esc(normUrl(u))}">🔗 ${esc(urlHost(u))}</a>`:'<span class="muted">—</span>';
 const prjOpts=(blank)=>[...(blank!==undefined?[['',blank]]:[]),...db.projects.map(p=>[p.id,`${p.code} · ${p.name}`])];
 const sumAmt=list=>r2(list.reduce((a,t)=>a+(+t.amount||0),0));
 const txIn=t=>t.kind==='in', txOut=t=>t.kind==='out';

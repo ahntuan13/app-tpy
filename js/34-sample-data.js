@@ -9,10 +9,10 @@ function loadSample(){
   const P=(o)=>{const p={id:uid('p'),code:nextCode('DA'),createdAt:Date.now()-db.projects.length*1000,...o};db.projects.push(p);return p};
   const spa=P({name:'App Đặt Lịch Spa',platforms:['iOS','Android'],customer:'Chuỗi spa Hoa Sen',pricing:'inv',status:'live',start:dAgo(230),end:dAgo(50),budget:120000000,description:'Ứng dụng đặt lịch, nhắc hẹn và tích điểm cho chuỗi spa. Khách lấy hóa đơn VAT theo từng đợt thanh toán.',
     phases:PH([['Khảo sát & yêu cầu','done','m1',230,210,36000000],['Thiết kế giao diện','done','m3',209,180],['Lập trình','done','m2',179,90,48000000],['Kiểm thử','done','m3',89,60],['Bàn giao & bảo trì năm đầu','doing','m2',55,-310,36000000]]),
-    tasks:TK([['Cập nhật màn hình tích điểm','m2',-9],['Gửi báo cáo lượt đặt lịch tháng này','m1',-4],['Xuất hóa đơn đợt bảo trì quý','m1',6]])});
+    link:'https://spa-hoasen.vn',tasks:TK([['Cập nhật màn hình tích điểm','m2',-9],['Gửi báo cáo lượt đặt lịch tháng này','m1',-4],['Xuất hóa đơn đợt bảo trì quý','m1',6]])});
   const ns=P({name:'Web Bán Nông Sản',platforms:['Web'],customer:'HTX Đồng Tháp Xanh',pricing:'noinv',status:'dev',start:dAgo(115),end:'',budget:60000000,description:'Trang bán hàng cho hợp tác xã, thanh toán chuyển khoản, khách không lấy hóa đơn.',
     phases:PH([['Khảo sát & yêu cầu','done','m2',115,100],['Thiết kế giao diện','done','m3',99,78],['Lập trình','doing','m2',77,-20],['Kiểm thử','todo','m3',null,-35],['Phát hành & bàn giao','todo','m1',null,-45]]),
-    tasks:TK([['Tích hợp giỏ hàng & mã giảm giá','m2',-14],['Chụp ảnh sản phẩm mẫu','m3',-6],['Chốt giao diện trang chủ','m3',78,true],['Viết nội dung trang giới thiệu','',null]])});
+    link:'nongsandongthap.com',tasks:TK([['Tích hợp giỏ hàng & mã giảm giá','m2',-14],['Chụp ảnh sản phẩm mẫu','m3',-6],['Chốt giao diện trang chủ','m3',78,true],['Viết nội dung trang giới thiệu','',null]])});
   const tv=P({name:'App Học Từ Vựng',platforms:['Android'],customer:'',pricing:'free',status:'live',start:dAgo(265),end:'',budget:25000000,description:'App miễn phí cho người dùng, có thu nhập nhỏ từ quảng cáo.',
     phases:PH([['Thiết kế giao diện','done','m3',265,240],['Lập trình','done','m2',239,180],['Phát hành','done','m1',179,170],['Tăng người dùng','doing','m3',169,-95]]),
     tasks:TK([['Thêm bộ từ vựng IELTS','m3',-24],['Trả lời đánh giá trên cửa hàng','',null]])});
@@ -37,5 +37,8 @@ function loadSample(){
   T(tv,'out',2000000,73,'noinv','m3','Chạy quảng cáo tăng lượt tải');
   T(tv,'in',2400000,1,'noinv','m3','Doanh thu quảng cáo quý này');
   T(kho,'out',500000,8,'noinv','m1','Gặp khách khảo sát');
+  const fund={id:FUND,customer:''},other={id:OTHER,customer:''};
+  T(fund,'in',10000000,240,'noinv','m1','Tuấn đóng quỹ đầu kỳ');T(fund,'in',10000000,240,'noinv','m2','Phúc đóng quỹ đầu kỳ');T(fund,'in',10000000,240,'noinv','m3','Yến đóng quỹ đầu kỳ');
+  T(other,'out',5400000,200,'noinv','m1','Gói Claude / ChatGPT / Cursor dùng chung (năm)');T(other,'out',1200000,30,'inv','m2','Tên miền & hosting chung','HD-2231');
   save();toast('Đã nạp dữ liệu mẫu');
 }
