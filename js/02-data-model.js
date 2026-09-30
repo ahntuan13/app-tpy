@@ -24,7 +24,7 @@ const DEFAULT_PHASES=['Khảo sát & yêu cầu','Thiết kế giao diện','L�
 function defaultDB(){return{
   version:1,
   seq:{DA:0,PT:0,PC:0},
-  company:{name:'3AE · AI App Studio',note:''},
+  company:{name:'TPY · AI App Studio',note:''},
   users:[{id:'u_admin',username:'admin',name:'Quản trị',role:'admin',pass:pw('admin123'),active:true}],
   members:[
     {id:'m1',name:'Tuấn',phone:'',bank:'',note:''},
@@ -40,11 +40,11 @@ function migrate(){const d=defaultDB();for(const k in d){if(db[k]===undefined)db
   /* Đổi tên mặc định cũ (Anh Hai / Anh Ba / Út) → Tuấn / Phúc / Yến; đổi tên nhóm mặc định cũ */
   const OLD={m1:['Anh Hai','Tuấn'],m2:['Anh Ba','Phúc'],m3:['Út','Yến']};
   db.members.forEach(m=>{const o=OLD[m.id];if(o&&m.name===o[0])m.name=o[1]});
-  if(db.company&&db.company.name==='3AE – Đầu tư App')db.company.name='3AE · AI App Studio';
+  if(db.company&&['3AE – Đầu tư App','3AE · AI App Studio'].includes(db.company.name))db.company.name='TPY · AI App Studio';
   ensureMembers()}
 function migrateAll(){return false}
 /* Có cần ghi lại sau khi migrate không (dùng ở chế độ Firebase) */
-function needsMigrate(){if(CORE_MEMBERS().some(c=>!db.members.some(m=>m.id===c.id)))return true;const OLD={m1:'Anh Hai',m2:'Anh Ba',m3:'Út'};return db.members.some(m=>OLD[m.id]===m.name)||db.company?.name==='3AE – Đầu tư App'||db.projects.some(p=>!Array.isArray(p.platforms))}
+function needsMigrate(){if(CORE_MEMBERS().some(c=>!db.members.some(m=>m.id===c.id)))return true;const OLD={m1:'Anh Hai',m2:'Anh Ba',m3:'Út'};return db.members.some(m=>OLD[m.id]===m.name)||['3AE – Đầu tư App','3AE · AI App Studio'].includes(db.company?.name)||db.projects.some(p=>!Array.isArray(p.platforms))}
 function load(){if(CLOUD){db=emptyCloudDB();migrate();return}try{const raw=localStorage.getItem(LS_KEY);db=raw?JSON.parse(raw):defaultDB()}catch(e){db=defaultDB()}migrate()}
 function save(){if(CLOUD){cloudPush();return}try{localStorage.setItem(LS_KEY,JSON.stringify(db))}catch(e){toast('Không lưu được dữ liệu (bộ nhớ trình duyệt đầy?). Hãy xuất sao lưu ngay.','error')}}
 /* Thực hiện thay đổi an toàn: lỗi thì trả lại dữ liệu cũ */

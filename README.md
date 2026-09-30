@@ -1,4 +1,4 @@
-# Quản lý Dự án – 3AE
+# Quản lý Dự án – TPY
 
 Web app quản lý các dự án / App do 3 anh em (Tuấn – Phúc – Yến) code bằng AI: ghi nhận dự án, từng giai đoạn, phân chia công việc, tiền về – khoản chi (có / không hóa đơn) và dashboard.
 Chạy thuần trình duyệt, đưa lên GitHub Pages là dùng được. Cùng kiến trúc với app **Quản lý Kho – TTD**.
@@ -44,11 +44,11 @@ Các file `js/` được nạp **theo thứ tự số** (file sau dùng hàm c�
 - Xuất **Excel**, **PDF**, **In** ở mọi báo cáo; **sao lưu / khôi phục JSON**.
 
 ## Đưa lên GitHub Pages
-1. Tạo repository mới trên GitHub (ví dụ `quanlyduan3ae`).
-2. Giải nén file zip, mở thư mục `quanlyduan-3ae`, chọn **toàn bộ** nội dung bên trong (Ctrl+A).
+1. Tạo repository mới trên GitHub (ví dụ `quanlyduantpy`).
+2. Giải nén file zip, mở thư mục `quanlyduan-tpy`, chọn **toàn bộ** nội dung bên trong (Ctrl+A).
 3. Vào repository → **Add file → Upload files** → kéo tất cả vào (kéo cả các thư mục `css`, `js`, `config`) → **Commit changes**.
 4. Settings → Pages → Deploy from a branch → `main` / `(root)` → Save.
-5. Sau ~1 phút mở `https://<tên>.github.io/quanlyduan3ae/` và bấm Ctrl+Shift+R.
+5. Sau ~1 phút mở `https://<tên>.github.io/quanlyduantpy/` và bấm Ctrl+Shift+R.
 
 Khi cập nhật sau này, chỉ cần upload lại **file thay đổi** (kèm `index.html` vì số phiên bản `?v=` trong đó giúp trình duyệt tải bản mới).
 
@@ -56,7 +56,7 @@ Chế độ cục bộ đăng nhập bằng `admin` / `admin123` → Settings �
 
 ## Bật Firebase (3 anh em dùng chung dữ liệu)
 Nên tạo **project Firebase riêng** cho app này, không dùng chung project `kho-ttd`.
-1. https://console.firebase.google.com → Create a project (ví dụ `du-an-3ae`).
+1. https://console.firebase.google.com → Create a project (ví dụ `du-an-tpy`).
 2. Trang chủ project → biểu tượng `</>` (Web) → Register app (không tick Hosting) → copy `firebaseConfig`.
 3. **Security → Authentication** → Get started → Sign-in method → **Email/Password** → Enable.
 4. Authentication → Settings → **Authorized domains** → thêm `<tên>.github.io`.
@@ -100,4 +100,4 @@ Khi bật Firebase, app **tự động sao lưu mỗi ngày** (lần đầu mộ
 - Tiền tệ là VND; ô số tiền gõ được kiểu `15.000.000` hoặc phép tính (`500000/1.08`).
 
 ---
-🔧 Developed by 3AE (chỉ dùng trong nội bộ)
+🔧 Developed by TPY (chỉ dùng trong nội bộ)

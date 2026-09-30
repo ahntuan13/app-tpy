@@ -68,7 +68,7 @@ PAGES['set/system']={t:'Sao lưu & Hệ thống',
     ${card('Tổng số bản ghi',miniTable(['Nhóm','Số lượng'],[['Dự án / App',db.projects.length],['Giai đoạn',db.projects.reduce((a,p)=>a+(p.phases||[]).length,0)],['Công việc',allTasks().length],['Giao dịch thu – chi',db.transactions.length],['Thành viên',db.members.length],['Người dùng',db.users.length]].map(([a,b])=>`<tr><td>${a}</td><td class="num">${b}</td></tr>`)))}`;
   }};
 SUB.company=form=>{if(!can('admin'))return toast('Chỉ quản trị viên được sửa.','error');const d=fd(form);db.company={name:d.name.trim(),note:(d.note||'').trim()};save();shell();render(true);toast('Đã lưu')};
-ACT.backup=()=>{const b=new Blob([JSON.stringify(db,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`sao-luu-du-an-3ae_${todayStr()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+ACT.backup=()=>{const b=new Blob([JSON.stringify(db,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`sao-luu-du-an-tpy_${todayStr()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
 ACT.restore=()=>{
   const i=document.createElement('input');i.type='file';i.accept='.json,application/json';
   i.onchange=()=>{const f=i.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{

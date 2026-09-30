@@ -7,13 +7,13 @@
    ===================================================================== */
 const ui={key:'',f:{},open:{},charts:[],cur:null};
 /* Ghi công tác giả – hiện ở menu trái, cuối mỗi trang, màn hình đăng nhập và báo cáo in */
-const CREDIT='🔧 Developed by 3AE (chỉ dùng trong nội bộ)';
+const CREDIT='🔧 Developed by TPY (chỉ dùng trong nội bộ)';
 const creditHTML=(cls='credit')=>`<div class="${cls}">${esc(CREDIT)}</div>`;
 const PAGES={},ACT={},SUB={};
 let PAGE=null,S=null,T=null,IMP=null;
 const F=()=>(ui.f[ui.key]??={});
 const badge=(t,x)=>`<span class="bd ${t}">${esc(x)}</span>`;
-const logoBlock=()=>typeof LOGO_DATA!=='undefined'?`<img class="lm-img" src="${LOGO_DATA}" alt="3AE">`:'<div class="lm">3AE</div>';
+const logoBlock=()=>typeof LOGO_DATA!=='undefined'?`<img class="lm-img" src="${LOGO_DATA}" alt="TPY">`:'<div class="lm">TPY</div>';
 const PAL=['#6c5ce7','#0e9f8b','#2f7de1','#e29a2d','#ec6a5e','#9b7bf0','#22b8c9','#64748b','#d6447a','#84b33a'];
 /* Màu biểu đồ theo ý nghĩa */
 const CC={in:'#0e9f8b',inInv:'#6c5ce7',inNo:'#f0a940',out:'#ec6a5e',line:'#2f7de1'};

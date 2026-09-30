@@ -1,4 +1,4 @@
-/* Trang giới thiệu sản phẩm 3AE – hiển thị danh sách PRODUCTS (san-pham.js) và vẽ hình minh họa giao diện bằng dữ liệu mẫu */
+/* Trang giới thiệu sản phẩm TPY – hiển thị danh sách PRODUCTS (san-pham.js) và vẽ hình minh họa giao diện bằng dữ liệu mẫu */
 'use strict';
 (function(){
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];

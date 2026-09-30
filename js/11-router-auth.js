@@ -5,7 +5,7 @@
 /* ---------- sidebar / shell / router ---------- */
 function sideHTML(){
   const al=allTasks().filter(isLate).length;
-  return `<div class="brand">${typeof LOGO_DATA!=='undefined'?`<img class="lg" src="${LOGO_DATA}" alt="3AE">`:'<div class="lg-t">3AE</div>'}<div><b>Quản lý Dự án</b><span>${esc(db.company.name||'')}</span></div></div><nav class="nav">`+
+  return `<div class="brand">${typeof LOGO_DATA!=='undefined'?`<img class="lg" src="${LOGO_DATA}" alt="TPY">`:'<div class="lg-t">TPY</div>'}<div><b>Quản lý Dự án</b><span>${esc(db.company.name||'')}</span></div></div><nav class="nav">`+
   MENU.map(g=>{
     const items=g.items;
     const active=ui.key.startsWith(g.g+'/');
@@ -31,7 +31,7 @@ function render(keep){
   $('#side').innerHTML=sideHTML();
   const g=MENU.find(x=>x.g===h.split('/')[0]);
   $('#crumb').textContent=g?`${g.icon} ${g.label}`:'';
-  $('#ptitle').textContent=PAGE.t;document.title=`${PAGE.t} – Quản lý Dự án 3AE`;
+  $('#ptitle').textContent=PAGE.t;document.title=`${PAGE.t} – Quản lý Dự án TPY`;
   destroyCharts();
   const sy=window.scrollY;
   try{

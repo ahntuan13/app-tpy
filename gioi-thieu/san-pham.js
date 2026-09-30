@@ -1,5 +1,5 @@
 /* =====================================================================
-   DANH SÁCH SẢN PHẨM – TRANG GIỚI THIỆU 3AE
+   DANH SÁCH SẢN PHẨM – TRANG GIỚI THIỆU TPY
    - Muốn thêm / sửa sản phẩm: chỉ cần sửa mảng PRODUCTS bên dưới.
    - KHÔNG ghi tên khách hàng, logo, link app hay dữ liệu thật (bảo mật khách hàng).
    - mock: kiểu hình minh họa (dashboard | inventory | assets | crm | exam | cashflow | kanban)
@@ -7,12 +7,12 @@
      Không có shots thì trang tự vẽ hình minh họa theo kiểu mock.
    ===================================================================== */
 const STUDIO={
-  name:'3AE',
+  name:'TPY',
   tagline:'AI App Studio',
   headline:'Biến quy trình giấy tờ, Excel thành web app chạy thật',
-  intro:'3AE là nhóm 3 người làm phần mềm bằng AI. Mỗi sản phẩm dưới đây là một bài toán thật của doanh nghiệp: từ file Excel, sổ sách rời rạc, chuyển thành web app có đăng nhập, phân quyền, đồng bộ nhiều người dùng và báo cáo tự động.',
-  cta:'Doanh nghiệp bạn đang quản lý bằng Excel, Zalo hay giấy tờ? Liên hệ 3AE để được xem demo trực tiếp và tư vấn một app phù hợp.',
-  credit:'🔧 Developed by 3AE (chỉ dùng trong nội bộ)'
+  intro:'TPY là nhóm 3 người làm phần mềm bằng AI. Mỗi sản phẩm dưới đây là một bài toán thật của doanh nghiệp: từ file Excel, sổ sách rời rạc, chuyển thành web app có đăng nhập, phân quyền, đồng bộ nhiều người dùng và báo cáo tự động.',
+  cta:'Doanh nghiệp bạn đang quản lý bằng Excel, Zalo hay giấy tờ? Liên hệ TPY để được xem demo trực tiếp và tư vấn một app phù hợp.',
+  credit:'🔧 Developed by TPY (chỉ dùng trong nội bộ)'
 };
 
 const PRODUCTS=[
@@ -153,7 +153,7 @@ const PRODUCTS=[
     shots:[['img/pm-1.jpg','Dashboard dòng tiền nhóm'],['img/pm-2.jpg','Phân chia công việc'],['img/pm-3.jpg','Danh sách dự án'],['img/pm-4.jpg','Sổ thu – chi']],
     name:'Quản lý Dự án & Dòng tiền nhóm',
     field:'Quản lý dự án',
-    client:'Nhóm phát triển phần mềm (sản phẩm nội bộ 3AE)',
+    client:'Nhóm phát triển phần mềm (sản phẩm nội bộ TPY)',
     color:'#4f8df5',
     mock:'kanban',
     summary:'Theo dõi các App đang làm: giai đoạn, phân chia công việc cho từng thành viên, tiền về, khoản chi có / không hóa đơn và quỹ nhóm.',

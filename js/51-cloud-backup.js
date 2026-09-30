@@ -83,7 +83,7 @@ ACT['bk-now']=async el=>{
 };
 ACT['bk-refresh']=()=>loadBackupList();
 ACT['bk-dl']=async el=>{
-  try{const {meta,data}=await readBackup(el.dataset.id);const b=new Blob([JSON.stringify({...data,users:[]},null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`sao-luu-3ae_${meta.date}_${el.dataset.id.slice(2,12)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+  try{const {meta,data}=await readBackup(el.dataset.id);const b=new Blob([JSON.stringify({...data,users:[]},null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`sao-luu-tpy_${meta.date}_${el.dataset.id.slice(2,12)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
   catch(e){toast(authMsg(e),'error')}
 };
 ACT['bk-del']=async el=>{

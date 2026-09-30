@@ -3,7 +3,7 @@
 (self.__mods=self.__mods||[]).push('01-core-utils');
 
 /* =====================================================================
-   QUẢN LÝ DỰ ÁN 3AE
+   QUẢN LÝ DỰ ÁN TPY
    Dữ liệu lưu trong localStorage của trình duyệt (không cần server).
    Sao lưu / khôi phục bằng file JSON: Settings → Sao lưu & Hệ thống.
    ===================================================================== */
