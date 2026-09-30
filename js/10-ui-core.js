@@ -24,6 +24,7 @@ const MENU=[
  {g:'cash',icon:'💰',label:'Dòng tiền',items:[['in','Tiền về'],['out','Khoản chi'],['all','Sổ thu – chi']]},
  {g:'task',icon:'✅',label:'Công việc',items:[['board','Phân chia theo người'],['all','Tất cả công việc'],['late','Trễ hạn']]},
  {g:'rpt',icon:'📅',label:'Báo cáo',items:[['project','Theo dự án'],['monthly','Theo tháng'],['invoice','Có / không hóa đơn']]},
+ {g:'intro',icon:'🌟',label:'Giới thiệu sản phẩm',items:[['share','Trang giới thiệu cho khách']]},
  {g:'set',icon:'⚙️',label:'Settings',items:[['members','Thành viên'],['users','User / Permission'],['system','Sao lưu & Hệ thống']]}
 ];
 /* ---------- toast / modal ---------- */

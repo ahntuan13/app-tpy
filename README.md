@@ -21,6 +21,7 @@ js/
   21-projects.js           Dự án / App: danh sách (theo loại hình), chi tiết, giai đoạn, công việc
   22-cashflow.js           Dòng tiền: Tiền về, Khoản chi, Sổ thu – chi, phiếu thu / chi
   23-tasks.js              Công việc: phân chia theo người, tất cả, trễ hạn
+  24-intro.js              Mục Giới thiệu sản phẩm: link chia sẻ trang gioi-thieu/ cho khách
   31-reports.js            Báo cáo: theo dự án, theo tháng, có / không hóa đơn
   33-settings.js           Thành viên, User / Permission, Sao lưu & Hệ thống
   34-sample-data.js        Dữ liệu mẫu
@@ -77,6 +78,13 @@ Với Firebase, quyền được kiểm tra ở máy chủ bằng `firestore.rul
 - Thanh đỏ dưới màn hình cho biết **tên file và số dòng** gây lỗi.
 - Màn hình "Thiếu file chương trình" nghĩa là quên upload một file trong `js/`.
 - F12 → Console để xem chi tiết.
+
+## Trang giới thiệu sản phẩm (công khai)
+- Link gửi khách: **https://ahntuan13.github.io/taytrai/gioi-thieu/** – không cần đăng nhập, không liên quan dữ liệu trong app.
+- Nội dung sản phẩm: `gioi-thieu/san-pham.js` (không ghi tên khách hàng, link app hay dữ liệu thật).
+- Giao diện: `gioi-thieu/style.css`, hình minh họa vẽ bằng dữ liệu mẫu trong `gioi-thieu/app.js`.
+- Muốn dùng ảnh chụp thật: đặt ảnh (đã che dữ liệu) vào `gioi-thieu/img/` rồi điền `img:'img/ten-anh.png'` cho sản phẩm.
+- Mở thẳng một sản phẩm: thêm `#id` vào link, ví dụ `…/gioi-thieu/#crm`.
 
 ## Sao lưu đám mây
 Khi bật Firebase, app **tự động sao lưu mỗi ngày** (lần đầu một người có quyền ghi mở app trong ngày) vào Firestore, collection `backups`.
