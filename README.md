@@ -90,6 +90,8 @@ Với Firebase, quyền được kiểm tra ở máy chủ bằng `firestore.rul
 - Nội dung sản phẩm: `gioi-thieu/san-pham.js` (không ghi tên khách hàng, link app hay dữ liệu thật).
 - Giao diện: `gioi-thieu/style.css`, hình minh họa vẽ bằng dữ liệu mẫu trong `gioi-thieu/app.js`.
 - Ảnh giao diện: `gioi-thieu/img/` – chụp từ app thật chạy với **dữ liệu giả** (tên, SĐT, số tiền giả; logo và tên khách đã thay). Khai báo trong trường `shots` của từng sản phẩm.
+- Liên hệ (tên, SĐT, email): mảng `CONTACTS` trong `gioi-thieu/san-pham.js`.
+- Hồ sơ năng lực PDF: `gioi-thieu/TPY-Ho-so-nang-luc.pdf` (11 trang A4), dựng từ `gioi-thieu/ho-so-nang-luc.html` – dùng chung dữ liệu với trang giới thiệu. Khi sửa sản phẩm / liên hệ, mở file html này bằng Chrome → Ctrl+P → Lưu thành PDF, khổ A4, Lề: Không, bật “Đồ họa nền”, rồi thay file PDF.
 - Mở thẳng một sản phẩm: thêm `#id` vào link, ví dụ `…/gioi-thieu/#crm`.
 
 ## Sao lưu đám mây

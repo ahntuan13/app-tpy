@@ -277,3 +277,18 @@ button{font:inherit;color:inherit;cursor:pointer}
 .th:hover{border-color:color-mix(in srgb,var(--c) 50%,transparent)}
 .cl .shotf .m-img{aspect-ratio:16/10}
 @media (max-width:620px){.th{flex-basis:120px}.nshots{right:20px}}
+
+/* ---------- liên hệ ---------- */
+.contacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+.ct{position:relative;display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;border-top:4px solid var(--c)}
+.ctav{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff;font:700 18px var(--display)}
+.ctb{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ctb b{font:600 16px var(--display)}
+.ctb a{text-decoration:none;color:var(--ink2);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctb a:hover{color:var(--c)}
+.cpy{position:absolute;right:10px;top:10px;border:0;background:#f1f2f8;border-radius:8px;width:30px;height:30px;color:var(--muted)}
+.cpy:hover{background:#e6e8f5;color:var(--ink)}
+.dl{display:flex;justify-content:center;margin-top:20px}
+.dlbtn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;color:#fff;background:var(--grad);padding:12px 22px;border-radius:12px;box-shadow:0 8px 20px -8px rgba(108,92,231,.6)}
+.dlbtn:hover{filter:brightness(1.06)}
+@media (max-width:980px){.contacts{grid-template-columns:1fr}}

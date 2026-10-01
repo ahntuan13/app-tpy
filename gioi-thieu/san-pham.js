@@ -15,6 +15,14 @@ const STUDIO={
   credit:'🔧 Developed by TPY (chỉ dùng trong nội bộ)'
 };
 
+/* Liên hệ – hiện ở trang giới thiệu và hồ sơ năng lực PDF */
+const CONTACTS=[
+  {name:'Anh Tuấn',phone:'0908129158',email:'ahntuan13@gmail.com',color:'#6c5ce7'},
+  {name:'Lê Phúc',phone:'0779187088',email:'phucdang2811@gmail.com',color:'#0e9f8b'},
+  {name:'Hoàng Yến',phone:'0775651177',email:'myle87231@gmail.com',color:'#ec6a5e'}
+];
+const fmtPhone=p=>String(p).replace(/\D/g,'').replace(/^(\d{4})(\d{3})(\d{3})$/,'$1 $2 $3');
+
 const PRODUCTS=[
   {
     id:'kho',

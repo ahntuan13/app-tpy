@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>TPY · AI App Studio – Hồ sơ năng lực</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lexend:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Hồ sơ năng lực TPY – bản in A4 (xuất PDF bằng trình duyệt: Ctrl+P → Lưu thành PDF, khổ A4, lề: không) */
+@page{size:A4;margin:0}
+:root{--ink:#1d2142;--ink2:#434a6e;--muted:#6f7797;--line:#e2e5f0;--bg:#f4f5fb;--indigo:#2e2f7a;--steel:#2c5f93;--violet:#6c5ce7;--teal:#16b3a2;
+  --grad:linear-gradient(135deg,#6c5ce7 0%,#4f8df5 100%);--display:'Lexend','Be Vietnam Pro',sans-serif;--body:'Be Vietnam Pro',Arial,sans-serif}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;padding:0;background:#d9dce6}
+body{font:10pt/1.55 var(--body);color:var(--ink)}
+h1,h2,h3,h4{font-family:var(--display);margin:0;letter-spacing:-.01em}
+p{margin:0}
+.page{width:210mm;height:297mm;position:relative;overflow:hidden;background:#fff;margin:0 auto 10mm;page-break-after:always;break-after:page}
+.page:last-child{page-break-after:auto;break-after:auto}
+@media print{html,body{background:#fff}.page{margin:0}}
+.pad{padding:16mm 16mm 0}
+.foot{position:absolute;left:16mm;right:16mm;bottom:9mm;display:flex;justify-content:space-between;align-items:center;font-size:7.5pt;color:var(--muted);border-top:1px solid var(--line);padding-top:3mm}
+.foot b{color:var(--ink2);font-weight:600}
+.lg{position:relative;display:inline-grid;place-items:center;height:12mm;min-width:16mm;padding:0 3mm;border-radius:3.4mm;background:linear-gradient(135deg,#9d8bff 0%,#22c3b0 100%);color:#fff;font:700 14pt var(--display)}
+.lg em{position:absolute;right:-2mm;top:-2mm;font-style:normal;background:#fff;color:var(--violet);font-size:6pt;font-weight:700;border-radius:99px;padding:.3mm 1.6mm;box-shadow:0 .3mm 1mm rgba(0,0,0,.2)}
+.eyebrow{font-size:7.5pt;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--violet)}
+.h2{font-size:20pt;line-height:1.2;margin:2mm 0 4mm}
+.lead{font-size:10.5pt;color:var(--ink2);max-width:150mm}
+
+/* ---------- bìa ---------- */
+.cover{color:#fff;background:radial-gradient(120mm 90mm at 95% 5%,rgba(34,195,176,.35),transparent 60%),radial-gradient(140mm 110mm at 0% 0%,rgba(157,139,255,.5),transparent 60%),linear-gradient(160deg,var(--indigo) 0%,var(--steel) 100%)}
+.cover .top{display:flex;justify-content:space-between;align-items:center;padding:16mm 16mm 0}
+.cover .brand{display:flex;gap:4mm;align-items:center}
+.cover .brand b{display:block;font:700 15pt var(--display);line-height:1.1}
+.cover .brand small{color:#c9cffc;font-size:9pt}
+.cover .year{font-size:8.5pt;letter-spacing:.14em;text-transform:uppercase;color:#c9cffc;border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:1.5mm 4mm}
+.cover .title{padding:22mm 16mm 0}
+.cover .kicker{font-size:9pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#bcc3ff}
+.cover h1{font-size:31pt;line-height:1.12;margin:4mm 0 6mm;max-width:178mm;text-wrap:balance}
+.cover .sub{font-size:11.5pt;color:#dfe3ff;max-width:150mm}
+.cover .shots{position:absolute;left:14mm;right:14mm;top:140mm;height:100mm}
+.cover .shots .s{position:absolute;border-radius:3mm;overflow:hidden;background:#fff;box-shadow:0 8mm 16mm -4mm rgba(8,10,40,.55);border:1px solid rgba(255,255,255,.5)}
+.cover .shots img{display:block;width:100%}
+.cover .s0{left:0;top:8mm;width:112mm;transform:rotate(-2.5deg)}
+.cover .s1{right:0;top:0;width:106mm;transform:rotate(2deg)}
+.cover .s2{left:46mm;top:34mm;width:100mm;transform:rotate(-.5deg);z-index:2}
+.cover .bottom{position:absolute;left:16mm;right:16mm;bottom:14mm;display:flex;justify-content:space-between;align-items:flex-end;gap:8mm}
+.cover .fields{display:flex;flex-wrap:wrap;gap:2mm;max-width:120mm}
+.cover .fields span{font-size:8pt;padding:1mm 3mm;border-radius:99px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)}
+.cover .team{text-align:right;font-size:9pt;color:#dfe3ff}
+.cover .team b{display:block;color:#fff;font:600 11pt var(--display)}
+
+/* ---------- về TPY ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;margin:7mm 0}
+.stat{background:var(--bg);border-radius:3mm;padding:4mm 4.5mm;border-left:1.2mm solid var(--violet)}
+.stat b{display:block;font:700 19pt var(--display);color:var(--ink);line-height:1.1}
+.stat span{font-size:8.5pt;color:var(--muted)}
+.sect{margin-top:8mm}
+.sect h3{font-size:12.5pt;margin-bottom:3.5mm;display:flex;align-items:center;gap:3mm}
+.sect h3::before{content:"";width:6mm;height:1.2mm;border-radius:1mm;background:var(--grad)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:3.5mm;counter-reset:s}
+.steps div{counter-increment:s;border:1px solid var(--line);border-radius:3mm;padding:4mm}
+.steps div::before{content:counter(s);display:grid;place-items:center;width:8mm;height:8mm;border-radius:2.4mm;background:var(--grad);color:#fff;font:700 10pt var(--display);margin-bottom:3mm}
+.steps b{font:600 10pt var(--display)}
+.steps p{font-size:8.5pt;color:var(--muted);margin-top:1.5mm}
+.pillars{display:grid;grid-template-columns:repeat(2,1fr);gap:3.5mm}
+.pillars div{display:flex;gap:3.5mm;align-items:flex-start;background:var(--bg);border-radius:3mm;padding:4mm}
+.pillars i{flex:none;width:9mm;height:9mm;border-radius:2.6mm;background:#eceafd;display:grid;place-items:center;font-style:normal;font-size:12pt}
+.pillars b{font:600 10pt var(--display)}
+.pillars p{font-size:8.5pt;color:var(--muted);margin-top:.8mm}
+.team3{display:grid;grid-template-columns:repeat(3,1fr);gap:3.5mm}
+.mem{border:1px solid var(--line);border-top:1.2mm solid var(--c);border-radius:3mm;padding:4mm;display:flex;gap:3mm;align-items:center}
+.mem .av{flex:none;width:11mm;height:11mm;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font:700 12pt var(--display)}
+.mem b{display:block;font:600 10.5pt var(--display)}
+.mem span{display:block;font-size:8.5pt;color:var(--ink2);white-space:nowrap}
+
+/* ---------- danh mục ---------- */
+table.cat{width:100%;border-collapse:collapse;margin-top:6mm;font-size:9pt}
+.cat th{text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:2.5mm 3mm;border-bottom:1.5px solid var(--ink)}
+.cat td{padding:3.6mm 3mm;border-bottom:1px solid var(--line);vertical-align:top}
+.cat .no{font:700 11pt var(--display);color:var(--c);width:10mm}
+.cat .nm b{display:block;font:600 10.5pt var(--display)}
+.cat .nm span{color:var(--muted);font-size:8.5pt}
+.cat .fd{white-space:nowrap}
+.chip{display:inline-block;font-size:7.5pt;font-weight:600;padding:.6mm 2.6mm;border-radius:99px;color:var(--c);background:color-mix(in srgb,var(--c) 13%,#fff)}
+.cat .pg{color:var(--muted);text-align:right;white-space:nowrap}
+.note{font-size:8pt;color:var(--muted);margin-top:5mm}
+
+/* ---------- trang sản phẩm ---------- */
+.pband{height:5mm;background:var(--c)}
+.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:6mm;padding:9mm 16mm 0}
+.phead .num{font:700 30pt var(--display);color:color-mix(in srgb,var(--c) 25%,#fff);line-height:1}
+.phead h2{font-size:19pt;line-height:1.2;margin:2mm 0 1.5mm}
+.phead .meta{display:flex;gap:2.5mm;align-items:center;flex-wrap:wrap;font-size:8.5pt;color:var(--muted)}
+.psum{padding:3mm 16mm 0;font-size:10.5pt;color:var(--ink2)}
+.shotmain{margin:5mm 16mm 0;border-radius:2.6mm;overflow:hidden;border:1px solid #dfe3ee;box-shadow:0 3mm 8mm -4mm rgba(29,33,66,.35)}
+.bar{display:flex;align-items:center;gap:1.4mm;height:5.5mm;padding:0 3mm;background:#f1f3f9;border-bottom:1px solid #e4e7f0}
+.bar span{width:1.8mm;height:1.8mm;border-radius:50%}
+.bar span:nth-child(1){background:#ff8a80}.bar span:nth-child(2){background:#ffd166}.bar span:nth-child(3){background:#7ee0b5}
+.bar em{font-style:normal;font-size:7pt;color:#7a819e;margin-left:2mm}
+.shotmain img{display:block;width:100%;height:80mm;object-fit:cover;object-position:top left}
+.shotrow{display:grid;grid-template-columns:repeat(3,1fr);gap:3.5mm;margin:3.5mm 16mm 0}
+.shotrow figure{margin:0}
+.shotrow .fr{border-radius:2mm;overflow:hidden;border:1px solid #dfe3ee}
+.shotrow img{display:block;width:100%;height:26mm;object-fit:cover;object-position:top left}
+.shotrow figcaption{font-size:7.5pt;color:var(--muted);margin-top:1.2mm}
+.pbody{display:grid;grid-template-columns:1fr 1.5fr;gap:7mm;padding:5mm 16mm 0}
+.prob{background:var(--bg);border-left:1.2mm solid var(--c);border-radius:2.4mm;padding:4mm}
+.prob b{font-size:7.5pt;text-transform:uppercase;letter-spacing:.1em;color:var(--c)}
+.prob p{font-size:9pt;color:var(--ink2);margin-top:1.5mm}
+.pstats{display:grid;gap:2.5mm;margin-top:3.5mm}
+.pstats div{display:flex;gap:3mm;align-items:baseline;border-bottom:1px dashed var(--line);padding-bottom:2mm}
+.pstats b{font:600 11pt var(--display);color:var(--c);min-width:26mm}
+.pstats span{font-size:8.5pt;color:var(--muted)}
+.feat h4{font-size:10pt;margin-bottom:2.5mm}
+.feat ul{list-style:none;margin:0;padding:0;display:grid;gap:1.8mm}
+.feat li{position:relative;padding-left:5.5mm;font-size:8.6pt;color:var(--ink2);line-height:1.45}
+.feat li::before{content:"✓";position:absolute;left:0;top:.4mm;width:3.8mm;height:3.8mm;border-radius:1.2mm;background:var(--c);color:#fff;font-size:6.5pt;font-weight:700;display:grid;place-items:center}
+.tech{display:flex;flex-wrap:wrap;gap:1.6mm;margin-top:3.5mm}
+.tech span{font-size:7.5pt;padding:.6mm 2.4mm;border-radius:1.4mm;background:#eef0fb;color:#4b4fc2;font-weight:500}
+
+/* ---------- liên hệ ---------- */
+.contact{color:#fff;background:radial-gradient(130mm 100mm at 100% 0%,rgba(34,195,176,.35),transparent 60%),linear-gradient(160deg,var(--indigo) 0%,var(--steel) 100%)}
+.contact .eyebrow{color:#bcc3ff}
+.contact h2{font-size:28pt;line-height:1.15;margin:4mm 0 5mm;max-width:178mm;text-wrap:balance}
+.contact .lead{color:#dfe3ff}
+.cards{display:grid;gap:5mm;margin-top:12mm}
+.card{display:grid;grid-template-columns:16mm 1fr;gap:5mm;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-left:1.6mm solid var(--c);border-radius:4mm;padding:5mm 6mm}
+.card .av{width:16mm;height:16mm;border-radius:50%;background:var(--c);display:grid;place-items:center;font:700 17pt var(--display)}
+.card b{font:600 15pt var(--display)}
+.card .ln{display:flex;gap:8mm;margin-top:1.5mm;font-size:10.5pt;color:#e6e9ff;flex-wrap:wrap}
+.qrrow{position:absolute;left:16mm;right:16mm;bottom:22mm;display:flex;gap:7mm;align-items:center;background:#fff;color:var(--ink);border-radius:5mm;padding:6mm}
+.qrrow img{width:34mm;height:34mm;border-radius:2mm}
+.qrrow b{font:600 13pt var(--display)}
+.qrrow p{font-size:9.5pt;color:var(--ink2);margin-top:1.5mm}
+.qrrow .url{display:inline-block;margin-top:2.5mm;font-weight:600;color:var(--violet);font-size:10pt}
+.contact .foot{color:#c9cffc;border-top-color:rgba(255,255,255,.2)}
+.contact .foot b{color:#fff}
+</style>
+</head>
+<body>
+<div id="doc"></div>
+<script src="san-pham.js"></script>
+<script>
+(function(){
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fields=[...new Set(PRODUCTS.map(p=>p.field))];
+const URL_SHOW='ahntuan13.github.io/app-tpy/gioi-thieu';
+const total=4+PRODUCTS.length;
+const foot=(n,dark)=>`<div class="foot"><span><b>TPY · AI App Studio</b> — Hồ sơ năng lực 2026</span><span>${URL_SHOW}</span><span>${String(n).padStart(2,'0')} / ${String(total).padStart(2,'0')}</span></div>`;
+const shot=(s,cls='')=>`<img src="${esc(s[0])}" alt="${esc(s[1])}">`;
+const pick=id=>PRODUCTS.find(p=>p.id===id);
+const ini=n=>n.trim().split(/\s+/).pop().charAt(0);
+let html='';
+
+/* 1. Bìa */
+const cv=[pick('ot'),pick('cash'),pick('crm')];
+html+=`<section class="page cover">
+  <div class="top"><div class="brand"><span class="lg">TPY<em>AI</em></span><div><b>TPY</b><small>AI App Studio</small></div></div><span class="year">Hồ sơ năng lực · 2026</span></div>
+  <div class="title"><div class="kicker">Company profile</div><h1>${esc(STUDIO.headline)}</h1><p class="sub">${esc(STUDIO.intro)}</p></div>
+  <div class="shots">${cv.map((p,i)=>`<div class="s s${i}">${shot(p.shots[0])}</div>`).join('')}</div>
+  <div class="bottom"><div class="fields">${fields.map(f=>`<span>${esc(f)}</span>`).join('')}</div><div class="team"><b>Tuấn · Phúc · Yến</b>${PRODUCTS.length} sản phẩm đã triển khai</div></div>
+</section>`;
+
+/* 2. Về TPY */
+html+=`<section class="page"><div class="pad">
+  <div class="eyebrow">Về chúng tôi</div><h2 class="h2">TPY – nhóm làm web app bằng AI cho doanh nghiệp</h2>
+  <p class="lead">${esc(STUDIO.intro)}</p>
+  <div class="stats"><div class="stat"><b>${PRODUCTS.length}</b><span>sản phẩm đã triển khai</span></div><div class="stat" style="border-color:#16b3a2"><b>${fields.length}</b><span>lĩnh vực nghiệp vụ</span></div><div class="stat" style="border-color:#2f7de1"><b>100%</b><span>chạy trên trình duyệt, không cần cài đặt</span></div><div class="stat" style="border-color:#ec6a5e"><b>3</b><span>thành viên, làm việc trực tiếp với khách</span></div></div>
+  <div class="sect"><h3>Cách TPY làm việc</h3><div class="steps">
+    <div><b>Tìm hiểu quy trình</b><p>Xem file Excel, biểu mẫu, sổ sách đang dùng và cách đội ngũ làm việc hằng ngày.</p></div>
+    <div><b>Làm bản demo</b><p>Dựng nhanh giao diện với dữ liệu mẫu để khách bấm thử, góp ý ngay trên màn hình thật.</p></div>
+    <div><b>Hoàn thiện & phân quyền</b><p>Đăng nhập, vai trò người dùng, đồng bộ nhiều người, báo cáo, xuất Excel / PDF.</p></div>
+    <div><b>Bàn giao & đồng hành</b><p>Đưa lên web, chuyển dữ liệu cũ, hướng dẫn sử dụng và cập nhật theo yêu cầu mới.</p></div></div></div>
+  <div class="sect"><h3>Điểm mạnh</h3><div class="pillars">
+    <div><i>⚡</i><span><b>Làm bằng AI</b><p>Rút ngắn thời gian viết code, tập trung vào nghiệp vụ của khách.</p></span></div>
+    <div><i>🔒</i><span><b>Bảo mật</b><p>Đăng nhập, phân quyền và kiểm soát truy cập ở máy chủ; dữ liệu khách hàng giữ kín.</p></span></div>
+    <div><i>☁</i><span><b>Đồng bộ đám mây</b><p>Nhiều người dùng cùng lúc, thay đổi hiện ngay; sao lưu tự động.</p></span></div>
+    <div><i>📱</i><span><b>Dùng mọi nơi</b><p>Chạy trên máy tính, máy tính bảng và điện thoại, không cần cài đặt.</p></span></div></div></div>
+  <div class="sect"><h3>Đội ngũ</h3><div class="team3">${CONTACTS.map(c=>`<div class="mem" style="--c:${c.color}"><span class="av">${esc(ini(c.name))}</span><div><b>${esc(c.name)}</b><span>${esc(fmtPhone(c.phone))}</span><span>${esc(c.email)}</span></div></div>`).join('')}</div></div>
+</div>${foot(2)}</section>`;
+
+/* 3. Danh mục sản phẩm */
+html+=`<section class="page"><div class="pad">
+  <div class="eyebrow">Danh mục</div><h2 class="h2">${PRODUCTS.length} sản phẩm đã triển khai</h2>
+  <p class="lead">Mỗi sản phẩm là một bài toán thật của doanh nghiệp. Chi tiết từng sản phẩm ở các trang tiếp theo.</p>
+  <table class="cat"><thead><tr><th></th><th>Sản phẩm</th><th>Lĩnh vực</th><th>Khách hàng</th><th>Trang</th></tr></thead><tbody>
+  ${PRODUCTS.map((p,i)=>`<tr style="--c:${p.color}"><td class="no">${String(i+1).padStart(2,'0')}</td><td class="nm"><b>${esc(p.name)}</b><span>${esc(p.summary)}</span></td><td class="fd"><span class="chip">${esc(p.field)}</span></td><td style="color:var(--ink2);font-size:8.5pt">${esc(p.client)}</td><td class="pg">${i+4}</td></tr>`).join('')}
+  </tbody></table>
+  <p class="note">Bảo mật khách hàng: tên khách hàng, logo và dữ liệu thật đã được ẩn. Ảnh giao diện trong hồ sơ được chụp từ app thật, chạy với dữ liệu mẫu.</p>
+</div>${foot(3)}</section>`;
+
+/* 4+. Từng sản phẩm */
+PRODUCTS.forEach((p,i)=>{
+  const sh=p.shots||[];
+  html+=`<section class="page" style="--c:${p.color}"><div class="pband"></div>
+  <div class="phead"><div><div class="meta"><span class="chip">${esc(p.field)}</span><span>${esc(p.client)}</span></div><h2>${esc(p.name)}</h2></div><span class="num">${String(i+1).padStart(2,'0')}</span></div>
+  <p class="psum">${esc(p.summary)}</p>
+  ${sh[0]?`<div class="shotmain"><div class="bar"><span></span><span></span><span></span><em>${esc(sh[0][1])}</em></div>${shot(sh[0])}</div>`:''}
+  ${sh.length>1?`<div class="shotrow">${sh.slice(1,4).map(s=>`<figure><div class="fr">${shot(s)}</div><figcaption>${esc(s[1])}</figcaption></figure>`).join('')}</div>`:''}
+  <div class="pbody"><div><div class="prob"><b>Bài toán của khách hàng</b><p>${esc(p.problem)}</p></div>
+    <div class="pstats">${p.stats.map(([a,b])=>`<div><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('')}</div></div>
+    <div class="feat"><h4>Tính năng chính</h4><ul>${p.features.map(f=>`<li>${esc(f)}</li>`).join('')}</ul><div class="tech">${p.tech.map(t=>`<span>${esc(t)}</span>`).join('')}</div></div></div>
+  ${foot(i+4)}</section>`;
+});
+
+/* Liên hệ */
+html+=`<section class="page contact"><div class="pad" style="padding-top:22mm">
+  <div class="eyebrow">Liên hệ</div><h2>Có một quy trình muốn số hóa?</h2><p class="lead">${esc(STUDIO.cta)}</p>
+  <div class="cards">${CONTACTS.map(c=>`<div class="card" style="--c:${c.color}"><span class="av">${esc(ini(c.name))}</span><div><b>${esc(c.name)}</b><div class="ln"><span>📞 ${esc(fmtPhone(c.phone))}</span><span>✉ ${esc(c.email)}</span></div></div></div>`).join('')}</div>
+</div>
+<div class="qrrow"><img src="qr.png" alt="QR trang giới thiệu"><div><b>Xem sản phẩm trực tuyến</b><p>Quét mã QR để mở trang giới thiệu: xem ảnh giao diện và tính năng chi tiết của từng sản phẩm.</p><span class="url">${URL_SHOW}</span></div></div>
+${foot(total,true)}</section>`;
+
+document.getElementById('doc').innerHTML=html;
+})();
+</script>
+</body>
+</html>

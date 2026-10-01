@@ -75,6 +75,12 @@ function render(){
       <button class="more" data-open="${p.id}">Xem tính năng <span aria-hidden="true">→</span></button>
     </div></article>`).join('');
   $('#cta-text').textContent=STUDIO.cta;
+  if(typeof CONTACTS!=='undefined')$('#contacts').innerHTML=CONTACTS.map(c=>`<div class="ct" style="--c:${c.color}">
+    <span class="ctav">${esc(c.name.trim().split(/\s+/).pop().charAt(0))}</span>
+    <div class="ctb"><b>${esc(c.name)}</b>
+      <a href="tel:${esc(c.phone)}">📞 ${esc(fmtPhone(c.phone))}</a>
+      <a href="mailto:${esc(c.email)}">✉ ${esc(c.email)}</a></div>
+    <button class="cpy" data-copy="${esc(c.phone)}" title="Sao chép số điện thoại">⧉</button></div>`).join('');
   $$('.credit-text').forEach(e=>e.textContent=STUDIO.credit);
 }
 let curId='';
@@ -98,6 +104,7 @@ function openDetail(id){
 }
 function closeDetail(){$('#modal').innerHTML='';document.body.classList.remove('noscroll')}
 document.addEventListener('click',e=>{
+  const cp=e.target.closest('[data-copy]');if(cp){const v=cp.dataset.copy;(navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>{cp.textContent='✓';setTimeout(()=>cp.textContent='⧉',1500)}).catch(()=>{});return}
   const th=e.target.closest('[data-shot]');if(th){const p=PRODUCTS.find(x=>x.id===curId);if(p){$('#md-main').innerHTML=mockOf(p,+th.dataset.shot,false);$$('.th').forEach(b=>b.setAttribute('aria-selected',b===th))}return}
   const o=e.target.closest('[data-open]');if(o){openDetail(o.dataset.open);return}
   const c=e.target.closest('[data-close]');if(c&&(e.target===c||c.classList.contains('x'))){closeDetail();return}
